@@ -1,4 +1,4 @@
-mirror-circle
-=============
+Circular mirror
+==============
 
-Experimental...
+Still experimental...
