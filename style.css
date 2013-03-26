@@ -1,0 +1,25 @@
+@import url("bootstrap/css/bootstrap.css");
+
+#console {
+    background: lightblue;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+#yValue, #xValue {
+    width: 30px;
+    margin-top: 5px;
+}
+
+#randomColorLine {
+    margin-top: 5px;
+}
+
+#colorPicker {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #aaa;
+    background: blue;
+    margin: 10px;
+}
