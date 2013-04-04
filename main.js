@@ -248,6 +248,7 @@ $("document").ready(function() {
  */
 function M(A, B, R) {  
 
+    // TODO: Use big numbers.
     var xA = A.x, yA = A.y;
     var xB = B.x, yB = B.y;
 
