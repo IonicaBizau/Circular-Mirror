@@ -72,7 +72,6 @@ function init() {
 
 
 $("document").ready(function() {
-    console.clear();
     init();
     $("html").hide().fadeIn(800);
     // Keydown in textboxes
@@ -127,112 +126,6 @@ $("document").ready(function() {
     });
 });
 
-
-/*
-    
-                               ^ y
-                               │
-                 B(xB, yB)     │
-                      ,,ggddY""│""Ybbgg,,
-                 ,ag****       │       `""bg,
-              ,gdP"*     **********        "Ybg, C(xC, yC)
-            ,dP"  *            │   ***********"*b,
-          ,dP"  *              │               "Yb,
-         ,8"   *               │                 "8,
-        ,8'  *                 │                  `8,
-       ,8'  *                  │                   `8,
-       d'  *                   │                    `b
-       8 *                     │                     8
-       8*                      │«------- R ---------»8     
-  ─────*───────────────────────┼──────────────────────────────> x
-      *8 A (xA, yA)            │ O (0, 0)            8
-     * 8                       │                     8
-    *  Y,                      │                    ,P
-   *   `8,                     │                   ,8'
-        `8,                    │                  ,8'
-         `8a                   │                 a8'
-          `Yba                 │               adP'
-            "Yba               │             adY"
-              `"Yba,           │         ,adP"'
-                 `"Y8ba,       │     ,ad8P"'
-                      ``""YYbaa│adPP""''
-                               │
-                               │
-
-    ==========================================================
-                    THE THEORY OF THIS CIRCLE
-    ==========================================================
-    One circle:
-     - Radius: R
-     - Center O(0, 0)
-
-    3 points: A, B, C:
-     - two known: A, B
-     - one that we have to find it
-
-    We know that they are point from the circle, so:
-
-    xA^2 + yA^2 = xB^2 + yB^2 = xC^2 + yC^2 = R^2
-
-    The length of AB is equal with BC and is L
-
-    Let's say that xC is x, and yC is y. We have the following system of equations:
-
-    /
-    | x ^ 2 + y ^ 2 = R ^ 2 (1)
-    | xB ^ 2 + yB ^ 2 = R ^ 2 (2)
-    | (x - xB) ^ 2 + (y - yB) ^ 2 = L ^ 2 (3)
-    \
-
-    (1) the equation of circle with radius R and center in O(0, 0) for x, y
-    (2) Same thing for xB, yB
-    (3) Equation of circle with radius L and center in xB.
-
-    ==========================================================
-                               SOLUTION
-    ==========================================================
-    Finally we have:
-        
-        k = 2R^2 - L^2
-        a = 4R^2
-        b = -4kyB
-        c = k^2 - R^2 * 4 * xB^2
-        
-        ------------------------
-
-        delta = b ^ 2 - 4ac
-
-        ------------------------
-        ++++++++++++++++++++++++
-        +    IF xB is not 0    +
-        ++++++++++++++++++++++++
-                     _______
-             - b  ± √ delta
-        y = ─────────────────────
-                   2a
-
-                 k - 2yyB
-        x = ─────────────────────
-                   2xB
-
-        ------------------------
-        ++++++++++++++++++++++++
-        +       IF xB is 0     +
-        ++++++++++++++++++++++++
-
-                k
-        y = ────────
-               2yB
-                 ____________
-                /        k 
-        x = \  / R^2 - ─────
-             \/          4R
-
-    ==========================================================
-                          AND THAT'S IT!
-    ==========================================================
-*/
-
 /**
  * THE MOST IMPORTANT FUNCTION. 
  * It always returns the next point.
@@ -240,19 +133,17 @@ $("document").ready(function() {
  * (xM(n - 1), yM(n - 1)) ---> |?    ?   ?|
  * (xM(n), yM(n))         ---> |     M    | ---> (xM(n + 1), yM(n + 1))
  * Radius                 ---> |?    ?   ?|
- *                             ------------
+ * Length of segments     ---> ------------
  * 
  * @param {Object} A
  * @param {Object} B
  * @param {Object} R
+ * @param {Object} L
  */
-function M(A, B, R) {  
+function M(A, B, R, L) {  
 
-    // TODO: Use big numbers.
     var xA = A.x, yA = A.y;
     var xB = B.x, yB = B.y;
-
-    var L = Math.sqrt(Math.pow((xA - xB), 2) + Math.pow((yA - yB), 2));
 
     var Ls = Math.pow(L, 2);
     var Rs = Math.pow(R, 2);
@@ -265,22 +156,27 @@ function M(A, B, R) {
     var delta = Math.pow(b, 2) - 4 * a * c;
 
     var x = 0, y = 0;
+    var FIXED = 20;
 
     if (xB !== 0) {
-        y = (-b + Math.sqrt(delta)) / (2 * a);
-        x = (k - 2 * y * yB) / (2 * xB);
+        y = ((-b + Math.sqrt(delta)) / (2 * a)).toFixed(FIXED);
+        x = ((k - 2 * y * yB) / (2 * xB)).toFixed(FIXED);
 
-        if (y === yA && x === xA) {
-            y = (-b - Math.sqrt(delta)) / (2 * a);
-            x = (k - 2 * y * yB) / (2 * xB);
+        // TODO: Is this the best method?
+        var yR = Math.round(y * 100)/100;
+        var xR = Math.round(x * 100)/100;
+        var xAR = Math.round(xA * 100)/100;
+        var yAR = Math.round(yA * 100)/100;
+
+        if (yR === yAR && xR === xAR) {
+            y = ((-b - Math.sqrt(delta)) / (2 * a)).toFixed(FIXED);
+            x = ((k - 2 * y * yB) / (2 * xB)).toFixed(FIXED);
         }
     }
     else {
-        y = k / (2 * yB);
-        x = Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R));
+        y = (k / (2 * yB)).toFixed(FIXED);
+        x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
     }
-   
-    console.log(x, y);
 
     return {
         "x": x,
@@ -297,12 +193,10 @@ function M(A, B, R) {
 function firstPoint(m, x1, y1) {  
     var pT = 40000;
     
-    // Coeficientii
     var a = pT + 400 * x1 + x1 * x1 + y1 * y1;
     var b = 400 * y1 * y1;
     var c = pT * (y1 * y1 - pT - 400 * x1 - x1 * x1);
                                 
-    // Calcularea lui x1, x2
     var xM = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
 
     if (xM == x1) {
@@ -326,8 +220,8 @@ function firstPoint(m, x1, y1) {
  * @param {Object} yA
  */
 function start(xA, yA) {
-    xA = parseInt(xA);
-    yA = parseInt(yA);
+    xA = parseFloat(xA);
+    yA = parseFloat(yA);
     
     var m = (yA / (200 + xA));
 
@@ -340,13 +234,41 @@ function start(xA, yA) {
         "y": yP
     };
 
+    var pointP = JSON.stringify(A);
+
+    // M, P, Q: the three points
+    var A = A;
     var B = firstP;
+    var C = {};
+
     var R = 200;
 
-    var nextPoint = M(A, B, R);
-    line(B.x, B.y, nextPoint.x, nextPoint.y, 2, lineColor);
+    var t = 0;
+    var withTemp = true;
+
+    var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
     
-    // Cercul din stanga (P)
+    while (/*(JSON.stringify(C) !== pointP) ||*/ (t < 20 && withTemp)) { 
+        var C = M(A, B, R, L);
+
+        if (C.x == "NaN" || C.y == "NaN") {
+            console.log("x or y is NaN! Stopping... :(");
+            return;
+        }
+
+        line(B.x, B.y, C.x, C.y, 2, lineColor);
+
+        A.x = B.x;
+        A.y = B.y;
+        B.x = C.x;
+        B.y = C.y;
+
+        t++;
+        console.log(t)
+    }
+
+    
+    // Point P
     circle(xP, yP, 2, 3, '#003300');
 }
 
