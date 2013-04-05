@@ -1,0 +1,105 @@
+
+/*
+    
+                               ^ y
+                               │
+                 B(xB, yB)     │
+                      ,,ggddY""│""Ybbgg,,
+                 ,ag****       │       `""bg,
+              ,gdP"*     **********        "Ybg, C(xC, yC)
+            ,dP"  *            │   ***********"*b,
+          ,dP"  *              │               "Yb,
+         ,8"   *               │                 "8,
+        ,8'  *                 │                  `8,
+       ,8'  *                  │                   `8,
+       d'  *                   │                    `b
+       8 *                     │                     8
+       8*                      │«------- R ---------»8     
+  ─────*───────────────────────┼──────────────────────────────> x
+      *8 A (xA, yA)            │ O (0, 0)            8
+     * 8                       │                     8
+    *  Y,                      │                    ,P
+   *   `8,                     │                   ,8'
+        `8,                    │                  ,8'
+         `8a                   │                 a8'
+          `Yba                 │               adP'
+            "Yba               │             adY"
+              `"Yba,           │         ,adP"'
+                 `"Y8ba,       │     ,ad8P"'
+                      ``""YYbaa│adPP""''
+                               │
+                               │
+
+    ==========================================================
+                    THE THEORY OF THIS CIRCLE
+    ==========================================================
+    One circle:
+     - Radius: R
+     - Center O(0, 0)
+
+    3 points: A, B, C:
+     - two known: A, B
+     - one that we have to find it
+
+    We know that they are point from the circle, so:
+
+    xA^2 + yA^2 = xB^2 + yB^2 = xC^2 + yC^2 = R^2
+
+    The length of AB is equal with BC and is L
+
+    Let's say that xC is x, and yC is y. We have the following system of equations:
+
+    /
+    | x ^ 2 + y ^ 2 = R ^ 2 (1)
+    | xB ^ 2 + yB ^ 2 = R ^ 2 (2)
+    | (x - xB) ^ 2 + (y - yB) ^ 2 = L ^ 2 (3)
+    \
+
+    (1) the equation of circle with radius R and center in O(0, 0) for x, y
+    (2) Same thing for xB, yB
+    (3) Equation of circle with radius L and center in xB.
+
+    ==========================================================
+                               SOLUTION
+    ==========================================================
+    Finally we have:
+        
+        k = 2R^2 - L^2
+        a = 4R^2
+        b = -4kyB
+        c = k^2 - R^2 * 4 * xB^2
+        
+        ------------------------
+
+        delta = b ^ 2 - 4ac
+
+        ------------------------
+        ++++++++++++++++++++++++
+        +    IF xB is not 0    +
+        ++++++++++++++++++++++++
+                     _______
+             - b  ± √ delta
+        y = ─────────────────────
+                   2a
+
+                 k - 2yyB
+        x = ─────────────────────
+                   2xB
+
+        ------------------------
+        ++++++++++++++++++++++++
+        +       IF xB is 0     +
+        ++++++++++++++++++++++++
+
+                k
+        y = ────────
+               2yB
+                 ____________
+                /        k 
+        x = \  / R^2 - ─────
+             \/          4R
+
+    ==========================================================
+                          AND THAT'S IT!
+    ==========================================================
+*/
