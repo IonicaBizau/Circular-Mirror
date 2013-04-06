@@ -34,6 +34,8 @@ var xO, yO;
  * Init function
  */
 function init() {
+    clearInterval(interval);
+
     canvas = document.getElementById('myCanvas');
     context = canvas.getContext('2d');
     
@@ -90,7 +92,7 @@ $("document").ready(function() {
     // Click on reset button
     $("#resetButton").on("click", function() {
         $("#myCanvas").remove();
-        $("center").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
+        $("#container").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
         init();
     });
     
@@ -110,10 +112,12 @@ $("document").ready(function() {
         if($(this).find("a").attr("data-color")) {
             lineColor = $(this).find("a").attr("data-color");
             $("#colorPicker").css("background", lineColor);
+            clearInterval(interval);
         }
         else { // random color;
             lineColor = "#" +(Math.random() * 0xFFFFFF << 0).toString(16);
             $("#colorPicker").css("background", lineColor);
+            clearInterval(interval);
         }
     });
     
@@ -158,7 +162,7 @@ function M(A, B, R, L) {
     var x = 0, y = 0;
     var FIXED = 20;
 
-    if (xB !== 0) {
+    if (xB != 0) {
         y = ((-b + Math.sqrt(delta)) / (2 * a)).toFixed(FIXED);
         x = ((k - 2 * y * yB) / (2 * xB)).toFixed(FIXED);
 
@@ -168,15 +172,27 @@ function M(A, B, R, L) {
         var xAR = Math.round(xA * 100)/100;
         var yAR = Math.round(yA * 100)/100;
 
-        if (yR === yAR && xR === xAR) {
+        if (yR == yAR && xR == xAR) {
             y = ((-b - Math.sqrt(delta)) / (2 * a)).toFixed(FIXED);
             x = ((k - 2 * y * yB) / (2 * xB)).toFixed(FIXED);
         }
     }
     else {
-        y = (k / (2 * yB)).toFixed(FIXED);
-        x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
+        // TODO: There can be other cases.
+        if (xB == 0 && yB == 200) {
+            x = 200;
+            y = 0;
+        }
+        else {
+            x = -200;
+            y = 0;
+        }
+        // y = (k / (2 * yB)).toFixed(FIXED);
+        // x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
     }
+    
+    x = parseFloat(x);
+    y = parseFloat(y);
 
     return {
         "x": x,
@@ -204,6 +220,7 @@ function firstPoint(m, x1, y1) {
     }
 
     var yM = m * (200 + xM);
+    
     return {
         "x":xM,
         "y":yM
@@ -219,7 +236,11 @@ function firstPoint(m, x1, y1) {
  * @param {Object} xA
  * @param {Object} yA
  */
+var interval;
+
 function start(xA, yA) {
+    clearInterval(interval);
+
     xA = parseFloat(xA);
     yA = parseFloat(yA);
     
@@ -234,7 +255,6 @@ function start(xA, yA) {
         "y": yP
     };
 
-    var pointP = JSON.stringify(A);
 
     // M, P, Q: the three points
     var A = A;
@@ -244,19 +264,63 @@ function start(xA, yA) {
     var R = 200;
 
     var t = 0;
-    var withTemp = true;
+    var withTemp = 5000;
 
+    var temp = {
+        "x": A.x.toFixed(7),
+        "y": A.y.toFixed(7)
+    };
+
+    var pointP = JSON.stringify(temp);
+    
     var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
     
-    while (/*(JSON.stringify(C) !== pointP) ||*/ (t < 20 && withTemp)) { 
+    var delay = 25; // 25 miliseconds
+
+    delay = 0;
+
+    // while true, because we verify inside of while when it has be stopped
+    interval = window.setInterval(function() {
         var C = M(A, B, R, L);
 
-        if (C.x == "NaN" || C.y == "NaN") {
-            console.log("x or y is NaN! Stopping... :(");
+        temp = {
+            "x": round(C.x, 7).toFixed(7),
+            "y": round(C.y, 7).toFixed(7)
+        };
+
+        var strC = JSON.stringify(temp);
+
+        if (withTemp) {
+            if (t > withTemp) {
+                console.log("t stopped the script.");
+                clearInterval(interval);
+                return;
+            }
+        }
+
+        var sum1 = Math.pow(B.x, 2) + Math.pow(B.y, 2);
+        var sum2 = Math.pow(C.x, 2) + Math.pow(C.y, 2);
+
+        var n1 = isNaN(sum1);
+        var n2 = isNaN(sum2);
+
+        var draw = true;
+
+        if (n1 || n2) {
+            draw = false;
+            clearInterval(interval);
+            console.log("Stopped because there was a NaN.");
             return;
         }
 
-        line(B.x, B.y, C.x, C.y, 2, lineColor);
+        if (round(sum1, 0) <= 40000 && round(sum2, 0) <= 40000 && draw) {
+            line(B.x, B.y, C.x, C.y, 2, lineColor);
+        }
+        if (strC == pointP) {
+            console.log("Same point! Yeah! :-)");
+            clearInterval(interval);
+            return;
+        }
 
         A.x = B.x;
         A.y = B.y;
@@ -265,7 +329,7 @@ function start(xA, yA) {
 
         t++;
         console.log(t)
-    }
+    }, delay);
 
     
     // Point P
@@ -273,7 +337,14 @@ function start(xA, yA) {
 }
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-// BASIC FUNCTIONS
+// BASIC FUNCTIONSi
+
+// Round
+function round(num, decimals) {
+    return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
+}
+
+
 // Circle
 function circle(x, y, r, w, color) {
     context.beginPath();
