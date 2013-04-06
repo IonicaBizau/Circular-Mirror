@@ -76,6 +76,7 @@ function init() {
 $("document").ready(function() {
     init();
     $("html").hide().fadeIn(800);
+
     // Keydown in textboxes
     $("#xValue").on("keydown", function(evt) {
         if(evt.keyCode === 13) {
@@ -83,7 +84,7 @@ $("document").ready(function() {
         }
     });
     
-    $("#yValue").on("keydown", function(evt) {
+    $("#angleValue").on("keydown", function(evt) {
         if(evt.keyCode === 13) {
             $("#drawButton").click();
         }
@@ -98,16 +99,20 @@ $("document").ready(function() {
     
     // Click on draw button
     $("#drawButton").on("click", function() {
-        start($("#xValue").val(), $("#yValue").val());
+        clearInterval(interval);
+        var A = getA(parseFloat($("#xValue").val()) + 200, -parseFloat($("#angleValue").val()));
+        start(A.x, A.y, function() {
+            var A = getA(parseFloat($("#xValue").val()) + 200, parseFloat($("#angleValue").val()));
+            start(A.x, A.y, function() {
+                console.log("Stopped...");
+            });
+
+            $("#yValue").val(A.y);
+            $("#xValue").val(A.x);
+        });
     });
     
-    // Click on random line button
-    $("#randomLineButton").on("click", function() {
-        $("#xValue").val(Math.floor(Math.random()*40));
-        $("#yValue").val(200 + Math.floor(Math.random()*50));
-        $("#drawButton").click();
-    });
-    
+    // Color picker 
     $(".dropdown-menu").find("li").on("click", function() {
         if($(this).find("a").attr("data-color")) {
             lineColor = $(this).find("a").attr("data-color");
@@ -119,14 +124,6 @@ $("document").ready(function() {
             $("#colorPicker").css("background", lineColor);
             clearInterval(interval);
         }
-    });
-    
-    $("#randomColorLine").on("click", function() {
-        lineColor = "#" +(Math.random() * 0xFFFFFF << 0).toString(16);
-        $("#colorPicker").css("background", lineColor);
-        $("#xValue").val(Math.floor(Math.random()*40));
-        $("#yValue").val(200 + Math.floor(Math.random()*50));
-        $("#drawButton").click();
     });
 });
 
@@ -179,7 +176,7 @@ function M(A, B, R, L) {
     }
     else {
         // TODO: There can be other cases.
-        if (xB == 0 && yB == 200) {
+        if (round(xB, 0) == 0 && round(yB, 0) == 200) {
             x = 200;
             y = 0;
         }
@@ -187,7 +184,7 @@ function M(A, B, R, L) {
             x = -200;
             y = 0;
         }
-        // y = (k / (2 * yB)).toFixed(FIXED);
+        // y = (k / (2 * yB)).toFixed(`1FIXED);
         // x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
     }
     
@@ -229,6 +226,30 @@ function firstPoint(m, x1, y1) {
 
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+/*
+                        |------|
+    xA          ---->   |      |===> (xA, yA)
+    angle (deg) ---->   |      |
+                        |------|
+*/
+
+function getA(xA, angle) {
+    // 1 PI ........... 180 deg
+    // x PI ........... angle deg
+    
+    var angleRad = (Math.PI * angle) / 180;
+    var tg = Math.tan(angleRad);
+    var yA = xA * tg;
+
+    var ROUND = 2;
+    // TODO: round?
+    return {
+        "x": round(xA - 200, ROUND),
+        "y": round(yA, ROUND)
+    };
+}
+
 // Update the UI
 // TODO: Give only the angle instead of points.
 /**
@@ -238,7 +259,8 @@ function firstPoint(m, x1, y1) {
  */
 var interval;
 
-function start(xA, yA) {
+function start(xA, yA, callback) {
+    
     clearInterval(interval);
 
     xA = parseFloat(xA);
@@ -264,7 +286,7 @@ function start(xA, yA) {
     var R = 200;
 
     var t = 0;
-    var withTemp = 5000;
+    var withTemp = parseInt($("#limit").val()) || 0;
 
     var temp = {
         "x": A.x.toFixed(7),
@@ -293,6 +315,7 @@ function start(xA, yA) {
         if (withTemp) {
             if (t > withTemp) {
                 console.log("t stopped the script.");
+                callback();
                 clearInterval(interval);
                 return;
             }
@@ -309,6 +332,7 @@ function start(xA, yA) {
         if (n1 || n2) {
             draw = false;
             clearInterval(interval);
+            callback();
             console.log("Stopped because there was a NaN.");
             return;
         }
@@ -319,6 +343,7 @@ function start(xA, yA) {
         if (strC == pointP) {
             console.log("Same point! Yeah! :-)");
             clearInterval(interval);
+            callback();
             return;
         }
 
