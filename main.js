@@ -409,9 +409,10 @@ function draw(B, C, R) {
         };
     }
 
-    R = Math.pow(R, 2);
+    // Again, not the best method.
+    R = Math.pow(R, 2) + 3;
 
-    if (round(sum1, 0) <= R && round(sum2, 0) <= R)
+    if (!(round(sum1, 0) <= R && round(sum2, 0) <= R)) {
         return {
             "message": "Something is wrong. Sum1 or sum2 is higher than R^2.",
             "code": 2,
