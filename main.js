@@ -1,16 +1,11 @@
 /*
-        //////////////////////////////////////////\
-       ////  Author: Ionica Bizau            ////\/\
-      ////  Copyright (C) 2012 Ionica BIzau ////\/\/\
-     ////  GNU LICENSE                     ////\/\/\/
-    //////////////////////////////////////////\/\/\/
-    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/\/
-     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
-      -------------------------------------------
-    ================================================
-     T H E  G R E A T  C I R C U L A R  M I R R O R
-    ================================================
-    TODO: CLEAN THE CODE!!!!
+    ==================================================
+    « T H E  G R E A T  C I R C U L A R  M I R R O R »
+    ==================================================
+    « Author: Ionica Bizau                           »
+    « COPYRIGHT (C) 2013 IONICA BIZAU                »
+    « UNDER GNU LICENSE                              »
+    ==================================================
 */
 
 // Canvas
@@ -29,6 +24,9 @@ var marginLeft;
 // Points
 var xP, yP;
 var xO, yO;
+
+// Interval
+var interval;
 
 /**
  * Init function
@@ -66,16 +64,29 @@ function init() {
     
     // The line from the left side
     line(-200, 200, -200, -200, 0.5, "red");
-
-    // ... do stuff with the transformed origin
-    // TODO: Do we need this?
-    //context.restore();
 }
 
 
+/*
+    On window load:
+     - init
+     - set handlers
+     - fadeIn
+*/
 $("document").ready(function() {
     init();
     $("html").hide().fadeIn(800);
+    handlers();
+});
+
+
+/*
+    Function that sets the handlers:
+     - keydown in textboxes
+     - click on the buttons
+     - color picker
+*/
+function handlers() {
 
     // Keydown in textboxes
     $("#xValue").on("keydown", function(evt) {
@@ -125,7 +136,138 @@ $("document").ready(function() {
             clearInterval(interval);
         }
     });
-});
+}
+
+/**
+ * Drawing the lines in <canvas>
+ * When finished the callback is called.
+ *
+ * @param {Object} xA
+ * @param {Object} yA
+ * @param {Object} callback
+ */
+function start(xA, yA, callback) {
+    // Clear the interval
+    clearInterval(interval);
+
+    // First point
+    xA = parseFloat(xA);
+    yA = parseFloat(yA);
+    
+    // The slope of AB
+    var m = (yA / (200 + xA));
+
+    // First point that is found
+    var firstP = firstPoint(m, xA, yA);
+    
+    // Draw line
+    line(xA, yA, firstP.x, firstP.y, 2, lineColor);
+
+    // Point A becomes P.
+    var A = {
+        "x": xP,
+        "y": yP
+    };
+
+    // A, B, C: the three points
+    var A = A;
+    var B = firstP;
+    var C = {};
+
+    // Radius
+    var R = 200;
+
+    // Counter
+    var t = 0;
+
+    // Limit
+    var withTemp = parseInt($("#limit").val()) || 0;
+
+    var temp = {
+        "x": A.x.toFixed(7),
+        "y": A.y.toFixed(7)
+    };
+
+    // Convert to string point P: "{ "x": "-200.0000000", "y": "0.0000000" }"
+    var pointP = JSON.stringify(temp);
+    
+    // Length of segment
+    var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
+    
+    // Delay of timer (interval)
+    var delay = 0; // TODO: Maybe a UI textbox where this can be setted?
+
+    // Start the timer
+    interval = window.setInterval(function() {
+        // Get the next point
+        var C = M(A, B, R, L);
+
+        // Convert to string the next point
+        temp = {
+            "x": round(C.x, 7).toFixed(7),
+            "y": round(C.y, 7).toFixed(7)
+        };
+
+        var strC = JSON.stringify(temp);
+
+        // If limit was setted verify if t is not higher than limit
+        if (withTemp) {
+            if (t > withTemp) {
+                console.log("t stopped the script.");
+                callback();
+                clearInterval(interval);
+                return;
+            }
+        }
+
+        // If the result doesn't contain code key, draw the line
+        var drawValue = draw(B, C, R);
+
+        if (!drawValue.code) {
+            line(B.x, B.y, C.x, C.y, 2, lineColor);
+        }
+        else {
+            if (drawValue.code == 1) {
+                clearInterval(interval);
+                callback(drawValue.message);
+                return;
+            }
+        }
+
+        // If point C is same with point P, SUCCESS! Stop it!
+        if (strC == pointP) {
+            console.log("Same point! Yeah! :-)");
+            clearInterval(interval);
+            callback();
+            return;
+        }
+
+        // Change the points
+        A.x = B.x;
+        A.y = B.y;
+        B.x = C.x;
+        B.y = C.y;
+
+        t++;
+        console.log(t);
+
+    }, delay);
+
+    
+    // Point P
+    circle(xP, yP, 2, 3, '#003300');
+}
+
+/* 
+    ===========================================
+                   BASIC FUNCTIONS
+    ===========================================
+*/
+
+// Round
+function round(num, decimals) {
+    return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
+}
 
 /**
  * THE MOST IMPORTANT FUNCTION. 
@@ -136,10 +278,10 @@ $("document").ready(function() {
  * Radius                 ---> |?    ?   ?|
  * Length of segments     ---> ------------
  * 
- * @param {Object} A
- * @param {Object} B
- * @param {Object} R
- * @param {Object} L
+ * @param {Object} A: first point
+ * @param {Object} B: second point
+ * @param {Object} R: radius of big circle
+ * @param {Object} L: length of segments
  */
 function M(A, B, R, L) {  
 
@@ -188,6 +330,7 @@ function M(A, B, R, L) {
         // x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
     }
     
+    // Return always float values
     x = parseFloat(x);
     y = parseFloat(y);
 
@@ -224,16 +367,13 @@ function firstPoint(m, x1, y1) {
     };
 }
 
-
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
 /*
+    Function that returns a point giving the angle
                         |------|
     xA          ---->   |      |===> (xA, yA)
     angle (deg) ---->   |      |
                         |------|
 */
-
 function getA(xA, angle) {
     // 1 PI ........... 180 deg
     // x PI ........... angle deg
@@ -250,125 +390,45 @@ function getA(xA, angle) {
     };
 }
 
-// Update the UI
-// TODO: Give only the angle instead of points.
-/**
- * Draw the lines
- * @param {Object} xA
- * @param {Object} yA
- */
-var interval;
+/*
+    Verify if the numbers are correct.
+    If not, return an false value.
+*/
+function draw(B, C, R) {
+     
+    var sum1 = Math.pow(B.x, 2) + Math.pow(B.y, 2);
+    var sum2 = Math.pow(C.x, 2) + Math.pow(C.y, 2);
 
-function start(xA, yA, callback) {
-    
-    clearInterval(interval);
+    var n1 = isNaN(sum1);
+    var n2 = isNaN(sum2);
 
-    xA = parseFloat(xA);
-    yA = parseFloat(yA);
-    
-    var m = (yA / (200 + xA));
-
-    var firstP = firstPoint(m, xA, yA);
-    
-    line(xA, yA, firstP.x, firstP.y, 2, lineColor);
-
-    var A = {
-        "x": xP,
-        "y": yP
-    };
-
-
-    // M, P, Q: the three points
-    var A = A;
-    var B = firstP;
-    var C = {};
-
-    var R = 200;
-
-    var t = 0;
-    var withTemp = parseInt($("#limit").val()) || 0;
-
-    var temp = {
-        "x": A.x.toFixed(7),
-        "y": A.y.toFixed(7)
-    };
-
-    var pointP = JSON.stringify(temp);
-    
-    var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
-    
-    var delay = 25; // 25 miliseconds
-
-    delay = 0;
-
-    // while true, because we verify inside of while when it has be stopped
-    interval = window.setInterval(function() {
-        var C = M(A, B, R, L);
-
-        temp = {
-            "x": round(C.x, 7).toFixed(7),
-            "y": round(C.y, 7).toFixed(7)
+    if (n1 || n2) {
+        return {
+            "message": "There is a NaN.",
+            "code": 1,
         };
+    }
 
-        var strC = JSON.stringify(temp);
+    R = Math.pow(R, 2);
 
-        if (withTemp) {
-            if (t > withTemp) {
-                console.log("t stopped the script.");
-                callback();
-                clearInterval(interval);
-                return;
-            }
-        }
-
-        var sum1 = Math.pow(B.x, 2) + Math.pow(B.y, 2);
-        var sum2 = Math.pow(C.x, 2) + Math.pow(C.y, 2);
-
-        var n1 = isNaN(sum1);
-        var n2 = isNaN(sum2);
-
-        var draw = true;
-
-        if (n1 || n2) {
-            draw = false;
-            clearInterval(interval);
-            callback();
-            console.log("Stopped because there was a NaN.");
-            return;
-        }
-
-        if (round(sum1, 0) <= 40000 && round(sum2, 0) <= 40000 && draw) {
-            line(B.x, B.y, C.x, C.y, 2, lineColor);
-        }
-        if (strC == pointP) {
-            console.log("Same point! Yeah! :-)");
-            clearInterval(interval);
-            callback();
-            return;
-        }
-
-        A.x = B.x;
-        A.y = B.y;
-        B.x = C.x;
-        B.y = C.y;
-
-        t++;
-        console.log(t)
-    }, delay);
-
+    if (round(sum1, 0) <= R && round(sum2, 0) <= R)
+        return {
+            "message": "Something is wrong. Sum1 or sum2 is higher than R^2.",
+            "code": 2,
+        };
+    }
     
-    // Point P
-    circle(xP, yP, 2, 3, '#003300');
+    // Default, return true
+    return {
+        "message": "That's correct. Let's draw the line!",
+    };
 }
 
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-// BASIC FUNCTIONSi
-
-// Round
-function round(num, decimals) {
-    return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
-}
-
+/* 
+    ===========================================
+                <CANVAS> FUNCTIONS
+    ===========================================
+*/
 
 // Circle
 function circle(x, y, r, w, color) {
