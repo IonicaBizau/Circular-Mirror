@@ -88,6 +88,23 @@ $("document").ready(function() {
 */
 function handlers() {
 
+    $("#angleValue").focus();
+
+    // Shortcuts for keyboard
+    $(document).on("keydown", function(e) {
+        console.log(e.keyCode);
+        
+        // SHIFT ==> Draw
+        if (e.keyCode === 16) {    
+            $("#drawButton").click();
+        }
+
+        // CTRL ==> Clear
+        if (e.keyCode === 17) {
+            $("#resetButton").click();
+        }
+    });
+
     // Keydown in textboxes
     $("#xValue").on("keydown", function(evt) {
         if(evt.keyCode === 13) {
@@ -111,9 +128,40 @@ function handlers() {
     // Click on draw button
     $("#drawButton").on("click", function() {
         clearInterval(interval);
-        var A = getA(parseFloat($("#xValue").val()) + 200, -parseFloat($("#angleValue").val()));
+        var angle = parseFloat($("#angleValue").val());
+        
+        var err = badAngle(angle);
+        if (err) {
+            showError(err);
+            return;
+        }
+
+        if (angle < 0.5 && angle !== 0) {
+            
+            var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
+            
+            line(A.x, A.y, -200, 0, 2, lineColor);
+            line(A.x, -A.y, -200, 0, 2, lineColor);
+            circle(A.x, A.y, 3, 3, lineColor);
+
+            for (var i = 0; i < 200; i++) {
+                circle(xO, yO, i, 1, lineColor);
+            }
+            return;
+        }
+
+        // Another hack.
+        if (angle > 84.7) {
+            angle = 84.7
+        }
+
+        $("#limit").val(getLimit(angle)); 
+
+        var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
+
         start(A.x, A.y, function() {
-            var A = getA(parseFloat($("#xValue").val()) + 200, parseFloat($("#angleValue").val()));
+            
+            var A = getA(parseFloat($("#xValue").val()) + 200, angle);
             start(A.x, A.y, function() {
                 console.log("Stopped...");
             });
@@ -136,6 +184,90 @@ function handlers() {
             clearInterval(interval);
         }
     });
+}
+
+/*
+    Set limit
+    Temp function, just a hack
+*/
+function getLimit(angle) {
+
+    angle = Math.abs(angle);
+
+    var data = [
+        {
+            "angles": [0, 6, 10, 18, 30, 36, 40, 45, 50, 60, 70, 54],
+            "value": 20
+        },
+        {
+            "angles": [2, 55, 58, 62, 63, 65],
+            "value": 100
+        },
+        {
+            "angles": [3, 42],
+            "value": 16
+        },
+        {
+            "angles": [20, 22, 23, 29, 47, 51, 52, 57],
+            "value": 130
+        },
+        {
+            "angles": [11, 48],
+            "value": 80
+        },
+        {
+            "angles": [7],
+            "value": 151
+        },
+        {
+            "angles": [5, 9],
+            "value": 410
+        },
+        {
+            "angles": [35, 49],
+            "value": 76
+        }
+    ]
+
+    for (var i in data) {
+        if (data[i].angles.indexOf(angle) !== -1) {
+            return data[i].value;        
+        }
+    }
+
+    return 1000;
+}
+
+function badAngle(angle, callback) {
+    angle = Math.abs(angle);
+
+    var angles = [1, 3, 75];
+
+    for (var i = 1; i < 2; i += 0.01) {
+        angles.push(i);
+    }
+
+    if (angles.indexOf(angle) !== -1) {
+        return "The angle is not supported yet.";
+    }
+
+    if (angle < 0) {
+        return "The angle is negative. Put a positive one less than 90 degrees.";
+    }
+
+    if (angle >= 90) {
+        return "The angle cannot be 90 degrees or greather.";
+    }
+
+    return null;
+}
+
+/*
+    Bootstrap modal error
+*/
+function showError(message) {
+    $("#error-message").text(message);
+    $("#modal-error").modal("show");
 }
 
 /**
