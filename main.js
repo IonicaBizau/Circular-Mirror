@@ -8,6 +8,9 @@
     ==================================================
 */
 
+// Language
+var lang;
+
 // Canvas
 var canvas, context;
 
@@ -26,13 +29,16 @@ var xP, yP;
 var xO, yO;
 
 // Interval
-var interval;
+var variableInterval;
+var delay;
 
 /**
  * Init function
  */
 function init() {
-    clearInterval(interval);
+    if (variableInterval) {
+        variableInterval.stop();
+    }
 
     canvas = document.getElementById('myCanvas');
     context = canvas.getContext('2d');
@@ -75,6 +81,7 @@ function init() {
 */
 $("document").ready(function() {
     init();
+    lang = $("body").attr("data-lang")
     $("html").hide().fadeIn(800);
     handlers();
 });
@@ -90,6 +97,16 @@ function handlers() {
 
     $("#angleValue").focus();
 
+    // Slider
+    $('#sl1').slider({
+      formater: function(value) {
+        if (variableInterval) {
+            delay = variableInterval.interval = value * 100;
+        }
+        return 'Current value: '+value;
+      }
+    });
+
     // Shortcuts for keyboard
     $(document).on("keydown", function(e) {
         console.log(e.keyCode);
@@ -102,6 +119,11 @@ function handlers() {
         // CTRL ==> Clear
         if (e.keyCode === 17) {
             $("#resetButton").click();
+        }
+
+        // SPACE ==> Close modal
+        if (e.keyCode === 32) {
+            $(".btn-close").click();
         }
     });
 
@@ -127,7 +149,10 @@ function handlers() {
     
     // Click on draw button
     $("#drawButton").on("click", function() {
-        clearInterval(interval);
+        if (variableInterval) {
+            variableInterval.stop();
+        }
+
         var angle = parseFloat($("#angleValue").val());
         
         var err = badAngle(angle);
@@ -136,7 +161,7 @@ function handlers() {
             return;
         }
 
-        if (angle < 0.5 && angle !== 0) {
+        if (angle < 0.5 && angle > 0) {
             
             var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
             
@@ -176,12 +201,12 @@ function handlers() {
         if($(this).find("a").attr("data-color")) {
             lineColor = $(this).find("a").attr("data-color");
             $("#colorPicker").css("background", lineColor);
-            clearInterval(interval);
+            variableInterval.stop();
         }
         else { // random color;
             lineColor = "#" +(Math.random() * 0xFFFFFF << 0).toString(16);
             $("#colorPicker").css("background", lineColor);
-            clearInterval(interval);
+            variableInterval.stop();
         }
     });
 }
@@ -204,7 +229,7 @@ function getLimit(angle) {
             "value": 100
         },
         {
-            "angles": [3, 42],
+            "angles": [3, 42, 15],
             "value": 16
         },
         {
@@ -239,24 +264,41 @@ function getLimit(angle) {
 }
 
 function badAngle(angle, callback) {
+    var messages = {
+        "en": [
+            "The angle is not supported yet.",
+            "The angle is negative. Put a positive one less than 90 degrees.",
+            "The angle cannot be 90 degrees or greater."
+        ],
+        "ro": [
+            "Aplicația nu poate simula ce se întâmplă in cazul acestui unghi.",
+            "Unghiul este negativ. Unghiul trebuie sa fie pozitiv, dar mai mic decât 90 de grade.",
+            "Unghiul nu poate fi de 90 de grade sau mai mare."
+        ]
+    };
+
     angle = Math.abs(angle);
 
-    var angles = [1, 3, 75];
+    var angles = [1, 3, 75, 80];
 
-    for (var i = 1; i < 2; i += 0.01) {
-        angles.push(i);
+    for (var i = 0.5; i < 2; i += 0.01) {
+        angles.push(round(i, 2));
     }
 
+    for (var i = 2.01; i < 5.99; i += 0.01) {
+        angles.push(round(i, 2));
+    }
+    
     if (angles.indexOf(angle) !== -1) {
-        return "The angle is not supported yet.";
+        return messages[lang][0];
     }
 
     if (angle < 0) {
-        return "The angle is negative. Put a positive one less than 90 degrees.";
+        return messages[lang][1];
     }
 
     if (angle >= 90) {
-        return "The angle cannot be 90 degrees or greather.";
+        return messages[lang][2];
     }
 
     return null;
@@ -280,7 +322,9 @@ function showError(message) {
  */
 function start(xA, yA, callback) {
     // Clear the interval
-    clearInterval(interval);
+    if (variableInterval) {
+        variableInterval.stop();
+    }
 
     // First point
     xA = parseFloat(xA);
@@ -326,11 +370,9 @@ function start(xA, yA, callback) {
     // Length of segment
     var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
     
-    // Delay of timer (interval)
-    var delay = 0; // TODO: Maybe a UI textbox where this can be setted?
-
-    // Start the timer
-    interval = window.setInterval(function() {
+    variableInterval = window.setVariableInterval(function() {
+        interval = this.interval;
+        
         // Get the next point
         var C = M(A, B, R, L);
 
@@ -347,7 +389,7 @@ function start(xA, yA, callback) {
             if (t > withTemp) {
                 console.log("t stopped the script.");
                 callback();
-                clearInterval(interval);
+                variableInterval.stop();
                 return;
             }
         }
@@ -360,7 +402,7 @@ function start(xA, yA, callback) {
         }
         else {
             if (drawValue.code == 1) {
-                clearInterval(interval);
+                variableInterval.stop();
                 callback(drawValue.message);
                 return;
             }
@@ -369,7 +411,7 @@ function start(xA, yA, callback) {
         // If point C is same with point P, SUCCESS! Stop it!
         if (strC == pointP) {
             console.log("Same point! Yeah! :-)");
-            clearInterval(interval);
+            variableInterval.stop();
             callback();
             return;
         }
@@ -594,3 +636,43 @@ function canvasArrow(context, fromx, fromy, tox, toy){
     context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
     context.stroke();
 }
+
+/*
+    =============================================
+           SET INTERVAL WITH VARIABLE DELAY
+    =============================================
+*/
+
+// THANKS! http://stackoverflow.com/a/1280490
+window.setVariableInterval = function(callbackFunc, timing) {
+    var variableInterval = {
+        interval: timing,
+        callback: callbackFunc,
+        stopped: false,
+        runLoop: function() {
+            if (variableInterval.stopped) return;
+            
+            var result = variableInterval.callback.call(variableInterval);
+            if (typeof result == 'number') {
+                if (result === 0) return;
+                variableInterval.interval = result;
+            }
+
+            variableInterval.loop();
+        },
+        stop: function() {
+            this.stopped = true;
+            window.clearTimeout(this.timeout);
+        },
+        start: function() {
+            this.stopped = false;
+            return this.loop();
+        },
+        loop: function() {
+            this.timeout = window.setTimeout(this.runLoop, this.interval);
+            return this;
+        }
+    };
+
+    return variableInterval.start();
+};

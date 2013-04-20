@@ -1,4 +1,26 @@
-@import url("bootstrap/css/bootstrap.css");
+/*
+    CSS STYLES FOR CIRCULAR MIRROR APPLICATION
+    COPYRIGHT (C) IONICA BIZAU
+*/
+
+@font-face {
+    font-family: "Kaushan Script";
+    font-style: normal;
+    font-weight: 400;
+    src: local('Kaushan Script'), local('KaushanScript-Regular'), url(fonts/font.woff) format('woff');
+}
+
+.logo {
+    font-family: "Kaushan Script", cursive;
+    color: white;
+    text-shadow: 0 0 15px black;
+    margin: 15px;
+}
+
+.container {
+    background: rgba(86, 113, 255, 0.5);
+    box-shadow: 0 0 10px black;
+}
 
 #console {
     background: lightblue;
@@ -21,5 +43,29 @@
     height: 30px;
     border: 1px solid #aaa;
     background: blue;
-    margin: 10px;
+}
+
+#myCanvas {
+    background: white;
+    border: 3px solid rgb(21, 90, 194);
+    box-shadow: 0 0 7px rgb(0, 0, 68);
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    background: url("img/bg.png");
+}
+
+/*  
+    960px                   480px
+    <------------------------|------------------------>
+                     <<BTN1 || BTN2>>
+                     <-------------->
+*/
+
+.btn-group {
+    margin: 10px 0 10px 365px;
 }
