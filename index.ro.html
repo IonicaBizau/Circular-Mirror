@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head> 
-        <title>Reflections into a circular mirror</title>
+        <title>Reflexii multiple într-o oglindă circulară</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script src="js/jquery-1.8.3.min.js"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
@@ -11,12 +11,12 @@
         <link href="slider/css/slider.css" rel="stylesheet" />
         <link href="style.css" rel="stylesheet" />
     </head>
-<body data-lang="en">
+<body data-lang="ro">
     <!-- Error modal -->
     <div id="modal-error" class="modal hide fade">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Error</h3>
+            <h3>Eroare</h3>
         </div>
         
         <div class="modal-body">
@@ -24,36 +24,36 @@
         </div>
         
         <div class="modal-footer">
-            <a href="#" class="btn btn-danger btn-close" data-dismiss="modal" aria-hidden="true">Close</a>
+            <a href="#" class="btn btn-danger btn-close" data-dismiss="modal" aria-hidden="true">Închideți</a>
         </div>
     </div>
 
     <div align="center" class="container" id="container">
-        <h1 class="logo">Multiple reflections into a circular mirror</h1>
+        <h1 class="logo">Reflexii multiple intr-o oglinda circulara</h1>
        
         <div class="btn-group">
             <button id="resetButton" class="btn btn-large btn-warning">
-                <i class="icon-remove-sign icon-white"></i> Clear
+                <i class="icon-remove-sign icon-white"></i> Ștergeți
             </button>
             
             <button id="drawButton" class="btn btn-large btn-primary">
-                <i class="icon-play icon-white"></i> Draw
+                <i class="icon-play icon-white"></i> Start
             </button>
             
             <button style="height:37px"data-toggle="dropdown" class="btn btn-info dropdown-toggle">
-                <i class="icon-adjust icon-white"></i> Select color <span class="caret"></span>
+                <i class="icon-adjust icon-white"></i> Selectează culoarea <span class="caret"></span>
             </button>
             
             <ul class="dropdown-menu">
-                <li><a data-color="red">Red</a></li>
-                <li><a href="#" data-color="orange">Orange</a></li>
-                <li><a href="#" data-color="yellow">Yellow</a></li>
-                <li><a href="#" data-color="green">Green</a></li>
-                <li><a href="#" data-color="blue">Blue</a></li>
+                <li><a data-color="red">Roșu</a></li>
+                <li><a href="#" data-color="orange">Portocaliu</a></li>
+                <li><a href="#" data-color="yellow">Galben</a></li>
+                <li><a href="#" data-color="green">Verde</a></li>
+                <li><a href="#" data-color="blue">Albastru</a></li>
                 <li><a href="#" data-color="indigo">Indigo</a></li>
                 <li><a href="#" data-color="violet">Violet</a></li>
                 <li class="divider"></li>
-                <li><a href="#">Random color</a></li>
+                <li><a href="#">Culoare la întâmplare</a></li>
             </ul>
         </div>
 
@@ -64,7 +64,7 @@
             limit: <input value="1000" id="limit" type="text" placeholder="Limit"/> <br />
         </div>
 
-        Angle (deg): <input value="45" id="angleValue" type="text" placeholder="Insert an angle." /> <br />
+        Unghiul (grade): <input value="45" id="angleValue" type="text" placeholder="Introduceți unghiul." /> <br />
 
         <div class="slider slider-horizontal hidden" style="width: 140px;">
             <div class="slider-track">
