@@ -41,6 +41,9 @@ function init() {
     }
 
     canvas = document.getElementById('myCanvas');
+    
+    console.dir(canvas);
+    
     context = canvas.getContext('2d');
     
     context.save();
@@ -147,6 +150,12 @@ function handlers() {
         init();
     });
     
+    // Click on download button
+    $(".btn-download").on("click", function() {
+        var imageLink = canvas.toDataURL();
+        window.open(imageLink);
+    });
+    
     // Click on draw button
     $("#drawButton").on("click", function() {
         if (variableInterval) {
@@ -233,7 +242,7 @@ function getLimit(angle) {
             "value": 16
         },
         {
-            "angles": [20, 22, 23, 29, 47, 51, 52, 57],
+            "angles": [20, 22, 23, 29, 47, 51, 52, 57, 45.8],
             "value": 130
         },
         {
@@ -279,7 +288,7 @@ function badAngle(angle, callback) {
 
     angle = Math.abs(angle);
 
-    var angles = [1, 3, 75, 80];
+    var angles = [1, 3, 75, 80, 81];
 
     for (var i = 0.5; i < 2; i += 0.01) {
         angles.push(round(i, 2));

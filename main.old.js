@@ -70,7 +70,7 @@ function init() {
  *             |-------------------------| 
  */
 
-/**
+/*
  * Get the next point of intersection with circle
  * @param {Object} M1
  * @param {Object} M2
