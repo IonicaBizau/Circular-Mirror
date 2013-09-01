@@ -3,9 +3,7 @@ Circular mirror
 ## Introduction
 <img width=300 align="right"  src="http://i.imgur.com/oXQDfW3.jpg">
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sed eleifend ipsum. Quisque pretium, felis varius eleifend euismod, mauris velit porta erat, sagittis auctor elit ante vitae dui. In quis massa ut felis tincidunt pharetra. Maecenas eu augue ut orci ullamcorper tristique id nec massa. Morbi a cursus mi. Suspendisse eget elementum nunc. Proin dictum, neque non tempus ultricies, lorem velit laoreet sem, et blandit urna purus ac velit. Sed imperdiet egestas sapien, nec faucibus ligula consequat malesuada. Nulla fermentum auctor quam, id rutrum lectus facilisis non. Cras elementum venenatis varius.
-
-Nullam vel nibh at metus accumsan interdum. Curabitur id purus orci, ac mattis turpis. Donec ut lorem urna. Morbi eros arcu, commodo a viverra quis, varius vel arcu. Curabitur et quam velit. Vivamus vestibulum lobortis tortor, id dictum felis congue vel. Vivamus rutrum metus nec lacus ullamcorper molestie. Vivamus felis felis, sollicitudin vitae volutpat vitae, hendrerit eu leo. Cras nulla eros, pulvinar id blandit vel, porta eget leo. Donec pretium lacus quis massa fermentum gravida ac ac odio. Sed at lacus odio, quis auctor ante. Integer odio magna, aliquet eu malesuada sodales, semper ac leo. Sed pulvinar tempor nunc, feugiat elementum neque egestas a. Curabitur tellus sapien, dapibus ut imperdiet sit amet, convallis ut sapien. Suspendisse ac urna at felis gravida viverra. Integer massa justo, vulputate ac ultricies et, blandit nec magna. 
+TODO
 
 ## Theory
 
