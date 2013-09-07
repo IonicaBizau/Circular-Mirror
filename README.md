@@ -1,9 +1,7 @@
 Circular mirror
 ==============
 ## Introduction
-<img width=300 align="right"  src="http://i.imgur.com/oXQDfW3.jpg">
-
-TODO
+![](http://i.imgur.com/oXQDfW3.jpg)
 
 ## Theory
 
