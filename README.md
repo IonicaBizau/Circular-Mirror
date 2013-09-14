@@ -11,9 +11,7 @@ Circular mirror
 Thanks for [mixedmath](http://math.stackexchange.com/users/9754/mixedmath)'s suggestion: "You are essentially asking how to find the intersection points of two circles, right?" ([link](http://math.stackexchange.com/questions/344052/intersection-of-chord-with-circle-knowing-the-length-and-a-point/351903#comment740176_344052))
 
 ## Copyright
-It's a free application, under GNU license.
 
-<pre>
 Circular mirror - simulating the reflections of a ray of light in a circular mirror
 Copyright (C) 2013  IONICĂ BIZĂU
 
@@ -29,4 +27,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
-</pre>
