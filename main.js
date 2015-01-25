@@ -111,7 +111,7 @@ $(document).ready(function () {
         // Click on reset button
         $("#resetButton").on("click", function() {
             $("#myCanvas").remove();
-            $("#container").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
+            $("article .container").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
             init();
         });
 
