@@ -1,32 +1,23 @@
 $(document).ready(function () {
 
-    // Errors
+    // Constants
     var ERROR_MESSAGES = {
         NOT_SUPPORTED: "The angle is not supported yet."
       , NEGATIVE_ANGLE: "The angle is negative. Put a positive one less than 90 degrees."
       , INVALID_ANGLE: "The angle cannot be 90 degrees or greater."
     };
 
-    // Canvas
-    var canvas, context;
-
-    // Variables
-    var cWidth, cHeight;
-    var lineColor = "blue";
-
-    // Radius
-    var r;
-
-    // Margin left
-    var marginLeft;
-
-    // Points
-    var xP, yP;
-    var xO, yO;
-
-    // Interval
-    var variableInterval;
-    var delay;
+    // Globals
+    var canvas, context
+      , cWidth, cHeight
+      , lineColor = "blue"
+      , r
+      , marginLeft
+      , xP, yP
+      , xO, yO
+      , variableInterval
+      , delay
+      ;
 
     /**
      * Init function
@@ -37,9 +28,6 @@ $(document).ready(function () {
         }
 
         canvas = document.getElementById('myCanvas');
-
-        console.dir(canvas);
-
         context = canvas.getContext('2d');
 
         context.save();
@@ -73,19 +61,6 @@ $(document).ready(function () {
 
 
     /*
-        On window load:
-         - init
-         - set handlers
-         - fadeIn
-    */
-    $("document").ready(function() {
-        init();
-        $("html").hide().fadeIn(800);
-        handlers();
-    });
-
-
-    /*
         Function that sets the handlers:
          - keydown in textboxes
          - click on the buttons
@@ -97,7 +72,6 @@ $(document).ready(function () {
 
         // Shortcuts for keyboard
         $(document).on("keydown", function(e) {
-            console.log(e.keyCode);
 
             // SHIFT ==> Draw
             if (e.keyCode === 16) {
@@ -639,4 +613,8 @@ $(document).ready(function () {
 
         return variableInterval.start();
     };
+
+    init();
+    $("html").hide().fadeIn(1000);
+    handlers();
 });
