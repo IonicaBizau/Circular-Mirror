@@ -31,70 +31,26 @@
             <p>Open source project at <a href="http://github.com/IonicaBizau/circular-mirror">github.com/IonicaBizau/circular-mirror</a></p>
             <p><a href="index.ro.html">RO</a> | EN</p>
             <div class="btn-group">
-                <button id="resetButton" class="btn btn-large btn-warning">
+                <button id="resetButton" class="btn bg-yellow">
                     <i class="icon-trash icon-white"></i> Clear
                 </button>
 
-                <button id="drawButton" class="btn btn-large btn-primary">
+                <button id="drawButton" class="btn bg-blue">
                     <i class="icon-play icon-white"></i> Draw
                 </button>
 
-                <button class="btn btn-success btn-download">
-                    <i class="icon-white icon-download"></i> Descarcă
+                <button class="btn btn-success bg-white">
+                    <i class="icon-white icon-download"></i> Download
                 </button>
 
-                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle">
+                <button data-toggle="dropdown" class="btn bg-white dropdown-toggle">
                     <i class="icon-adjust icon-white"></i> Select color <span class="caret"></span>
                 </button>
-
-                <ul class="dropdown-menu">
-                    <li><a data-color="red">Red</a></li>
-                    <li><a href="#" data-color="orange">Orange</a></li>
-                    <li><a href="#" data-color="yellow">Yellow</a></li>
-                    <li><a href="#" data-color="green">Green</a></li>
-                    <li><a href="#" data-color="blue">Blue</a></li>
-                    <li><a href="#" data-color="indigo">Indigo</a></li>
-                    <li><a href="#" data-color="violet">Violet</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Random color</a></li>
-                </ul>
             </div>
 
-
-            <div class="hidden">
-                xA: <input value="-210" id="xValue" type="text" placeholder="xA" />
-                yA: <input value="-10" id="yValue" type="text" placeholder="yA" disabled/> <br />
-                limit: <input value="1000" id="limit" type="text" placeholder="Limit"/> <br />
-            </div>
-
-            Angle (deg): <input value="45" id="angleValue" type="text" placeholder="Insert an angle." /> <br />
-
-            <div class="slider slider-horizontal hidden" style="width: 140px;">
-                <div class="slider-track">
-                    <div class="slider-selection" style="left: 0%; width: 50%;"></div>
-                    <div class="slider-handle round" ></div>
-                    <div class="slider-handle round hide" style="left: 0%;"></div>
-                </div>
-                <div class="tooltip top" style="top: -40px; left: -8px;"><div class="tooltip-arrow"></div>
-                <div class="tooltip-inner">Current value: 10</div></div><input type="text" id="sl1" value="4" class="span2" style="">
-            </div>
-
-            <br />
-
-            <!-- Select color -->
-            <div class="row">
-                <div class="span1">
-                </div>
-                <div class="span2">
-                    <div class="btn-group">
-                    </div>
-                </div>
-            </div>
-
-            <br />
+            Angle (deg): <input value="45" id="angleValue" type="text" placeholder="Insert an angle." class="form-elm" /> <br />
 
             <canvas id="myCanvas" width="600" height="600"> </canvas>
-
         </div>
     </body>
 </html>
