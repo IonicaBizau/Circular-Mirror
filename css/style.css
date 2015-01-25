@@ -11,3 +11,7 @@ h1 { margin: 0; }
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.19);
     border-radius: 4px;
 }
+
+header, footer {
+    background-image: url("./bg2.png");
+}
