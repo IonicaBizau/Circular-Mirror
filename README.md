@@ -1,5 +1,6 @@
 Circular mirror
 ==============
+
 ## Introduction
 ![](http://i.imgur.com/oXQDfW3.jpg)
 
