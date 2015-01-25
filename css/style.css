@@ -1,6 +1,8 @@
 @import url("caiuss.min.css");
 
 .modal p { color: black; }
+body { background-image: url("./bg.png"); }
+h1 { margin: 0; }
 
 #randomColorLine {
     margin-top: 5px;
@@ -15,8 +17,8 @@
 
 #myCanvas {
     background: white;
-    border: 1px solid rgba(0, 0, 0, 0.36);
-    box-shadow: 0 0 7px rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(0, 0, 0, 0.17);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.19);
     border-radius: 4px;
 }
 
@@ -38,3 +40,4 @@
     width: 450px;
     margin: 10px 0;
 }
+
