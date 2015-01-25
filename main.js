@@ -20,7 +20,7 @@ var lineColor = "blue";
 
 // Radius
 var r;
-    
+
 // Margin left
 var marginLeft;
 
@@ -41,15 +41,15 @@ function init() {
     }
 
     canvas = document.getElementById('myCanvas');
-    
+
     console.dir(canvas);
-    
+
     context = canvas.getContext('2d');
-    
+
     context.save();
     context.scale(1,-1);
     context.translate(300, -300);
-    
+
     cWidth = canvas.width;
     cHeight = canvas.height;
     r = 200;
@@ -57,20 +57,20 @@ function init() {
 
     xP = marginLeft;
     yP = 0;
-    
+
     xO = 0;
     yO = 0;
-    
+
     // The arrows: Ox, Oy
     canvasArrow(context, -250, 0, 250, 0);
     canvasArrow(context, 0, -250, 0, 250);
-        
+
     // The main circle
     circle(xO, yO, r, 1, '#003300');
 
     // Centre of main circle
     circle(xO, yO, 2, 3, '#003300');
-    
+
     // The line from the left side
     line(-200, 200, -200, -200, 0.5, "red");
 }
@@ -100,22 +100,12 @@ function handlers() {
 
     $("#angleValue").focus();
 
-    // Slider
-    $('#sl1').slider({
-      formater: function(value) {
-        if (variableInterval) {
-            delay = variableInterval.interval = value * 100;
-        }
-        return 'Current value: '+value;
-      }
-    });
-
     // Shortcuts for keyboard
     $(document).on("keydown", function(e) {
         console.log(e.keyCode);
-        
+
         // SHIFT ==> Draw
-        if (e.keyCode === 16) {    
+        if (e.keyCode === 16) {
             $("#drawButton").click();
         }
 
@@ -136,26 +126,26 @@ function handlers() {
             $("#drawButton").click();
         }
     });
-    
+
     $("#angleValue").on("keydown", function(evt) {
         if(evt.keyCode === 13) {
             $("#drawButton").click();
         }
     });
-    
+
     // Click on reset button
     $("#resetButton").on("click", function() {
         $("#myCanvas").remove();
         $("#container").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
         init();
     });
-    
+
     // Click on download button
     $(".btn-download").on("click", function() {
         var imageLink = canvas.toDataURL();
         window.open(imageLink);
     });
-    
+
     // Click on draw button
     $("#drawButton").on("click", function() {
         if (variableInterval) {
@@ -163,7 +153,7 @@ function handlers() {
         }
 
         var angle = parseFloat($("#angleValue").val());
-        
+
         var err = badAngle(angle);
         if (err) {
             showError(err);
@@ -171,9 +161,9 @@ function handlers() {
         }
 
         if (angle < 0.5 && angle > 0) {
-            
+
             var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
-            
+
             line(A.x, A.y, -200, 0, 2, lineColor);
             line(A.x, -A.y, -200, 0, 2, lineColor);
             circle(A.x, A.y, 3, 3, lineColor);
@@ -189,12 +179,12 @@ function handlers() {
             angle = 84.7
         }
 
-        $("#limit").val(getLimit(angle)); 
+        $("#limit").val(getLimit(angle));
 
         var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
 
         start(A.x, A.y, function() {
-            
+
             var A = getA(parseFloat($("#xValue").val()) + 200, angle);
             start(A.x, A.y, function() {
                 console.log("Stopped...");
@@ -204,8 +194,8 @@ function handlers() {
             $("#xValue").val(A.x);
         });
     });
-    
-    // Color picker 
+
+    // Color picker
     $(".dropdown-menu").find("li").on("click", function() {
         if($(this).find("a").attr("data-color")) {
             lineColor = $(this).find("a").attr("data-color");
@@ -265,7 +255,7 @@ function getLimit(angle) {
 
     for (var i in data) {
         if (data[i].angles.indexOf(angle) !== -1) {
-            return data[i].value;        
+            return data[i].value;
         }
     }
 
@@ -297,7 +287,7 @@ function badAngle(angle, callback) {
     for (var i = 2.01; i < 5.99; i += 0.01) {
         angles.push(round(i, 2));
     }
-    
+
     if (angles.indexOf(angle) !== -1) {
         return messages[lang][0];
     }
@@ -338,13 +328,13 @@ function start(xA, yA, callback) {
     // First point
     xA = parseFloat(xA);
     yA = parseFloat(yA);
-    
+
     // The slope of AB
     var m = (yA / (200 + xA));
 
     // First point that is found
     var firstP = firstPoint(m, xA, yA);
-    
+
     // Draw line
     line(xA, yA, firstP.x, firstP.y, 2, lineColor);
 
@@ -375,13 +365,13 @@ function start(xA, yA, callback) {
 
     // Convert to string point P: "{ "x": "-200.0000000", "y": "0.0000000" }"
     var pointP = JSON.stringify(temp);
-    
+
     // Length of segment
     var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
-    
+
     variableInterval = window.setVariableInterval(function() {
         interval = this.interval;
-        
+
         // Get the next point
         var C = M(A, B, R, L);
 
@@ -436,12 +426,12 @@ function start(xA, yA, callback) {
 
     }, delay);
 
-    
+
     // Point P
     circle(xP, yP, 2, 3, '#003300');
 }
 
-/* 
+/*
     ===========================================
                    BASIC FUNCTIONS
     ===========================================
@@ -453,20 +443,20 @@ function round(num, decimals) {
 }
 
 /**
- * THE MOST IMPORTANT FUNCTION. 
+ * THE MOST IMPORTANT FUNCTION.
  * It always returns the next point.
  *                             ------------
  * (xM(n - 1), yM(n - 1)) ---> |?    ?   ?|
  * (xM(n), yM(n))         ---> |     M    | ---> (xM(n + 1), yM(n + 1))
  * Radius                 ---> |?    ?   ?|
  * Length of segments     ---> ------------
- * 
+ *
  * @param {Object} A: first point
  * @param {Object} B: second point
  * @param {Object} R: radius of big circle
  * @param {Object} L: length of segments
  */
-function M(A, B, R, L) {  
+function M(A, B, R, L) {
 
     var xA = A.x, yA = A.y;
     var xB = B.x, yB = B.y;
@@ -512,7 +502,7 @@ function M(A, B, R, L) {
         // y = (k / (2 * yB)).toFixed(`1FIXED);
         // x = (Math.sqrt(Math.pow(R, 2) - Math.pow(k, 2) / (4 * R))).toFixed(FIXED);
     }
-    
+
     // Return always float values
     x = parseFloat(x);
     y = parseFloat(y);
@@ -529,13 +519,13 @@ function M(A, B, R, L) {
  * @param {Object} x1
  * @param {Object} y1
  */
-function firstPoint(m, x1, y1) {  
+function firstPoint(m, x1, y1) {
     var pT = 40000;
-    
+
     var a = pT + 400 * x1 + x1 * x1 + y1 * y1;
     var b = 400 * y1 * y1;
     var c = pT * (y1 * y1 - pT - 400 * x1 - x1 * x1);
-                                
+
     var xM = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
 
     if (xM == x1) {
@@ -543,7 +533,7 @@ function firstPoint(m, x1, y1) {
     }
 
     var yM = m * (200 + xM);
-    
+
     return {
         "x":xM,
         "y":yM
@@ -560,7 +550,7 @@ function firstPoint(m, x1, y1) {
 function getA(xA, angle) {
     // 1 PI ........... 180 deg
     // x PI ........... angle deg
-    
+
     var angleRad = (Math.PI * angle) / 180;
     var tg = Math.tan(angleRad);
     var yA = xA * tg;
@@ -578,7 +568,7 @@ function getA(xA, angle) {
     If not, return an false value.
 */
 function draw(B, C, R) {
-     
+
     var sum1 = Math.pow(B.x, 2) + Math.pow(B.y, 2);
     var sum2 = Math.pow(C.x, 2) + Math.pow(C.y, 2);
 
@@ -601,14 +591,14 @@ function draw(B, C, R) {
             "code": 2,
         };
     }
-    
+
     // Default, return true
     return {
         "message": "That's correct. Let's draw the line!",
     };
 }
 
-/* 
+/*
     ===========================================
                 <CANVAS> FUNCTIONS
     ===========================================
@@ -627,12 +617,12 @@ function circle(x, y, r, w, color) {
 function line(x1, y1, x2, y2, w, color) {
     context.beginPath();
     context.lineWidth = w;
-    context.strokeStyle = color;  
+    context.strokeStyle = color;
     context.moveTo(x1,y1);
     context.lineTo(x2,y2);
     context.stroke();
 }
-    
+
 // Draw Arrow
 function canvasArrow(context, fromx, fromy, tox, toy){
     context.beginPath();
@@ -660,7 +650,7 @@ window.setVariableInterval = function(callbackFunc, timing) {
         stopped: false,
         runLoop: function() {
             if (variableInterval.stopped) return;
-            
+
             var result = variableInterval.callback.call(variableInterval);
             if (typeof result == 'number') {
                 if (result === 0) return;
