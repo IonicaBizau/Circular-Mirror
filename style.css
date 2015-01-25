@@ -1,38 +1,6 @@
-body {
-    background: url("img/bg.png");
-}
+@import url("caiuss.min.css");
 
-p, a {
-    color: white;
-}
-
-.modal p {
-    color: black;
-}
-
-.logo {
-    font-family: "Kaushan Script", cursive;
-    color: white;
-    text-shadow: 0 0 15px black;
-    margin: 15px;
-}
-
-.container {
-    background: rgba(86, 113, 255, 0.5);
-    box-shadow: 0 0 10px black;
-}
-
-#console {
-    background: lightblue;
-    padding: 10px;
-    border-radius: 10px;
-    margin: 10px;
-}
-
-#yValue, #xValue {
-    width: 30px;
-    margin-top: 5px;
-}
+.modal p { color: black; }
 
 #randomColorLine {
     margin-top: 5px;
@@ -47,8 +15,9 @@ p, a {
 
 #myCanvas {
     background: white;
-    border: 3px solid rgb(21, 90, 194);
-    box-shadow: 0 0 7px rgb(0, 0, 68);
+    border: 1px solid rgba(0, 0, 0, 0.36);
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.34);
+    border-radius: 4px;
 }
 
 .hidden {
