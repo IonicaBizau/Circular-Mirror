@@ -5,40 +5,9 @@
 body { background-image: url("./bg.png"); }
 h1 { margin: 0; }
 
-#randomColorLine {
-    margin-top: 5px;
-}
-
-#colorPicker {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #aaa;
-    background: blue;
-}
-
 #myCanvas {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.17);
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.19);
     border-radius: 4px;
 }
-
-.hidden {
-    display: none;
-}
-
-
-.btn-group button {
-    height: 40px;
-}
-
-.btn-group .btn {
-    margin: 0 -2px;
-    float: none;
-}
-
-.btn-group {
-    width: 450px;
-    margin: 10px 0;
-}
-
