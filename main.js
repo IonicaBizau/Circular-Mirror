@@ -19,10 +19,129 @@ $(document).ready(function () {
       , delay
       ;
 
+    // Utils
     /**
-     * Init function
+     * setVariableInterval
+     * Sets a variable interval.
+     *
+     * @name setVariableInterval
+     * @function
+     * @param {Function} callbackFunc The callback function.
+     * @param {Number} timing The interval value.
+     * @return {Object} The object containing the variable interval methods.
+     */
+    function setVariableInterval (callbackFunc, timing) {
+        var variableInterval = {
+            interval: timing,
+            callback: callbackFunc,
+            stopped: false,
+            runLoop: function() {
+                if (variableInterval.stopped) return;
+
+                var result = variableInterval.callback.call(variableInterval);
+                if (typeof result == 'number') {
+                    if (result === 0) return;
+                    variableInterval.interval = result;
+                }
+
+                variableInterval.loop();
+            },
+            stop: function() {
+                this.stopped = true;
+                window.clearTimeout(this.timeout);
+            },
+            start: function() {
+                this.stopped = false;
+                return this.loop();
+            },
+            loop: function() {
+                this.timeout = window.setTimeout(this.runLoop, this.interval);
+                return this;
+            }
+        };
+
+        return variableInterval.start();
+    }
+
+    /**
+     * circle
+     * Draws a circle on the canvas.
+     *
+     * @name circle
+     * @function
+     * @param {Number} x The x value.
+     * @param {Number} y The y value.
+     * @param {Number} r The radius value.
+     * @param {Number} w The line width.
+     * @param {String} color The color.
+     * @return {undefined}
+     */
+    function circle(x, y, r, w, color) {
+        context.beginPath();
+        context.arc(x, y, r, 0, 2 * Math.PI, false);
+        context.lineWidth = w;
+        context.strokeStyle = color;
+        context.stroke();
+    }
+
+    /**
+     * line
+     * Draws a line on the canvas.
+     *
+     * @name line
+     * @function
+     * @param {Number} x1 The source `x` value.
+     * @param {Number} y1 The source `y` value.
+     * @param {Number} x2 The target `x` value.
+     * @param {Number} y2 The target `y` value.
+     * @param {Number} w The line width.
+     * @param {String} color The color.
+     * @return {undefined}
+     */
+    function line(x1, y1, x2, y2, w, color) {
+        context.beginPath();
+        context.lineWidth = w;
+        context.strokeStyle = color;
+        context.moveTo(x1,y1);
+        context.lineTo(x2,y2);
+        context.stroke();
+    }
+
+    /**
+     * canvasArrow
+     * Draws an arrow on the canvas.
+     *
+     * @name canvasArrow
+     * @function
+     * @param {Object} context The canvas context.
+     * @param {Number} fromx The source `x` value.
+     * @param {Number} fromy The source `y` value.
+     * @param {Number} tox The target `x` value.
+     * @param {Number} toy The target `y` value.
+     * @return {undefined}
+     */
+    function canvasArrow(context, fromx, fromy, tox, toy){
+        context.beginPath();
+        var headlen = 5;
+        var angle = Math.atan2(toy - fromy, tox - fromx);
+        context.moveTo(fromx, fromy);
+        context.lineTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        context.moveTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.stroke();
+    }
+
+    /**
+     * init
+     * This function is called to reinit the canvas.
+     *
+     * @name init
+     * @function
+     * @return {undefined}
      */
     function init() {
+
         if (variableInterval) {
             variableInterval.stop();
         }
@@ -59,18 +178,19 @@ $(document).ready(function () {
         line(-200, 200, -200, -200, 0.5, "red");
     }
 
-
-    /*
-        Function that sets the handlers:
-         - keydown in textboxes
-         - click on the buttons
-         - color picker
-    */
+    /**
+     * handlers
+     * This function appends the DOM handlers.
+     *
+     * @name handlers
+     * @function
+     * @return {undefined}
+     */
     function handlers() {
 
         $("#angleValue").focus();
 
-        // Shortcuts for keyboard
+        // Keyboard shortcuts
         $(document).on("keydown", function(e) {
 
             // SHIFT ==> Draw
@@ -84,26 +204,27 @@ $(document).ready(function () {
             }
         });
 
+        // Draw
         $("#angleValue").on("keydown", function(evt) {
             if(evt.keyCode === 13) {
                 $("#drawButton").click();
             }
         });
 
-        // Click on reset button
+        // Reset button
         $("#resetButton").on("click", function() {
             $("#myCanvas").remove();
             $("article .container").append("<canvas id='myCanvas' width='600' height='600'></canvas>");
             init();
         });
 
-        // Click on download button
+        // Download button
         $(".btn-download").on("click", function() {
             var imageLink = canvas.toDataURL();
             window.open(imageLink);
         });
 
-        // Click on draw button
+        // Draw button
         $("#drawButton").on("click", function() {
             if (variableInterval) {
                 variableInterval.stop();
@@ -148,26 +269,17 @@ $(document).ready(function () {
                 });
             });
         });
-
-        // Color picker
-        $(".dropdown-menu").find("li").on("click", function() {
-            if($(this).find("a").attr("data-color")) {
-                lineColor = $(this).find("a").attr("data-color");
-                $("#colorPicker").css("background", lineColor);
-                variableInterval.stop();
-            }
-            else { // random color;
-                lineColor = "#" +(Math.random() * 0xFFFFFF << 0).toString(16);
-                $("#colorPicker").css("background", lineColor);
-                variableInterval.stop();
-            }
-        });
     }
 
-    /*
-        Set limit
-        Temp function, just a hack
-    */
+    /**
+     * getLimit
+     * This is a **hack**. This roundes the angle in a format that is supported by the application.
+     *
+     * @name getLimit
+     * @function
+     * @param {Number} angle The angle that should be rounded.
+     * @return {Number} A rounded angle that is supported by the application.
+     */
     function getLimit(angle) {
 
         angle = Math.abs(angle);
@@ -216,7 +328,16 @@ $(document).ready(function () {
         return 1000;
     }
 
-    function badAngle(angle, callback) {
+    /**
+     * badAngle
+     * Checks if the angle is supported.
+     *
+     * @name badAngle
+     * @function
+     * @param {Number} angle The angle that should be checked.
+     * @return {null|String} An error (string) or `null`.
+     */
+    function badAngle(angle) {
 
         angle = Math.abs(angle);
 
@@ -245,19 +366,32 @@ $(document).ready(function () {
         return null;
     }
 
+    /**
+     * showError
+     * Shows an error message.
+     *
+     * @name showError
+     * @function
+     * @param {String} message The error message.
+     * @return {undefined}
+     */
     function showError(message) {
         alert(message);
     }
 
     /**
-     * Drawing the lines in <canvas>
-     * When finished the callback is called.
+     * start
+     * Draws the lines on the canvas.
      *
-     * @param {Object} xA
-     * @param {Object} yA
-     * @param {Object} callback
+     * @name start
+     * @function
+     * @param {Number} xA The current x value.
+     * @param {Number} yA The current y value.
+     * @param {Function} callback The callback function.
+     * @return {undefined}
      */
     function start(xA, yA, callback) {
+
         // Clear the interval
         if (variableInterval) {
             variableInterval.stop();
@@ -535,84 +669,6 @@ $(document).ready(function () {
             "message": "That's correct. Let's draw the line!",
         };
     }
-
-    /*
-        ===========================================
-                    <CANVAS> FUNCTIONS
-        ===========================================
-    */
-
-    // Circle
-    function circle(x, y, r, w, color) {
-        context.beginPath();
-        context.arc(x, y, r, 0, 2 * Math.PI, false);
-        context.lineWidth = w;
-        context.strokeStyle = color;
-        context.stroke();
-    }
-
-    // Line
-    function line(x1, y1, x2, y2, w, color) {
-        context.beginPath();
-        context.lineWidth = w;
-        context.strokeStyle = color;
-        context.moveTo(x1,y1);
-        context.lineTo(x2,y2);
-        context.stroke();
-    }
-
-    // Draw Arrow
-    function canvasArrow(context, fromx, fromy, tox, toy){
-        context.beginPath();
-        var headlen = 10;
-        var angle = Math.atan2(toy-fromy,tox-fromx);
-        context.moveTo(fromx, fromy);
-        context.lineTo(tox, toy);
-        context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy-headlen*Math.sin(angle-Math.PI/6));
-        context.moveTo(tox, toy);
-        context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
-        context.stroke();
-    }
-
-    /*
-        =============================================
-               SET INTERVAL WITH VARIABLE DELAY
-        =============================================
-    */
-
-    // THANKS! http://stackoverflow.com/a/1280490
-    window.setVariableInterval = function(callbackFunc, timing) {
-        var variableInterval = {
-            interval: timing,
-            callback: callbackFunc,
-            stopped: false,
-            runLoop: function() {
-                if (variableInterval.stopped) return;
-
-                var result = variableInterval.callback.call(variableInterval);
-                if (typeof result == 'number') {
-                    if (result === 0) return;
-                    variableInterval.interval = result;
-                }
-
-                variableInterval.loop();
-            },
-            stop: function() {
-                this.stopped = true;
-                window.clearTimeout(this.timeout);
-            },
-            start: function() {
-                this.stopped = false;
-                return this.loop();
-            },
-            loop: function() {
-                this.timeout = window.setTimeout(this.runLoop, this.interval);
-                return this;
-            }
-        };
-
-        return variableInterval.start();
-    };
 
     init();
     $("html").hide().fadeIn(1000);
