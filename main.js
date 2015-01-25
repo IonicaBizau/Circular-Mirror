@@ -10,7 +10,7 @@ $(document).ready(function () {
     // Globals
     var canvas, context
       , cWidth, cHeight
-      , lineColor = "blue"
+      , lineColor = "#2980b9"
       , r
       , marginLeft
       , xP, yP
@@ -20,6 +20,20 @@ $(document).ready(function () {
       ;
 
     // Utils
+    /**
+     * round
+     * Rounds a number.
+     *
+     * @name round
+     * @function
+     * @param {Number} num The input number.
+     * @param {Number} decimals How many decimals.
+     * @return {Number} The rounded number.
+     */
+    function round(num, decimals) {
+        return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+    }
+
     /**
      * setVariableInterval
      * Sets a variable interval.
@@ -102,8 +116,8 @@ $(document).ready(function () {
         context.beginPath();
         context.lineWidth = w;
         context.strokeStyle = color;
-        context.moveTo(x1,y1);
-        context.lineTo(x2,y2);
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
         context.stroke();
     }
 
@@ -124,12 +138,10 @@ $(document).ready(function () {
         context.beginPath();
         var headlen = 5;
         var angle = Math.atan2(toy - fromy, tox - fromx);
-        context.moveTo(fromx, fromy);
-        context.lineTo(tox, toy);
-        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-        context.moveTo(tox, toy);
-        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
-        context.stroke();
+
+        line(fromx, fromy, tox, toy, 2, "#7f8c8d");
+        line(tox, toy, tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6), 2, "#7f8c8d");
+        line(tox, toy, tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6), 2, "#7f8c8d");
     }
 
     /**
@@ -169,13 +181,62 @@ $(document).ready(function () {
         canvasArrow(context, 0, -250, 0, 250);
 
         // The main circle
-        circle(xO, yO, r, 1, '#003300');
+        circle(xO, yO, r, 2, '#34495e');
 
         // Centre of main circle
-        circle(xO, yO, 2, 3, '#003300');
+        circle(xO, yO, 2, 2, '#34495e');
 
         // The line from the left side
-        line(-200, 200, -200, -200, 0.5, "red");
+        line(-200, 200, -200, -200, 2, "#c0392b");
+    }
+
+
+    /**
+     * draw
+     * Starts drawing the things.
+     *
+     * @name draw
+     * @function
+     * @return {undefined}
+     */
+    function draw() {
+
+        if (variableInterval) {
+            variableInterval.stop();
+        }
+
+        var angle = parseFloat($("#angleValue").val())
+          , err = badAngle(angle)
+          , A = null
+          ;
+
+        if (err) {
+            return showError(err);
+        }
+
+        if (angle < 0.5 && angle > 0) {
+
+            A = getA(-10, -angle);
+
+            line(A.x, A.y, -200, 0, 2, lineColor);
+            line(A.x, -A.y, -200, 0, 2, lineColor);
+            circle(A.x, A.y, 3, 3, lineColor);
+
+            for (var i = 0; i < 200; i++) {
+                circle(xO, yO, i, 1, lineColor);
+            }
+            return;
+        }
+
+        // Another hack.
+        if (angle > 84.7) {
+            angle = 84.7
+        }
+
+        // Draw the lines
+        start(getA(-10, -angle), function () {
+            start(getA(-10, angle));
+        });
     }
 
     /**
@@ -225,50 +286,7 @@ $(document).ready(function () {
         });
 
         // Draw button
-        $("#drawButton").on("click", function() {
-            if (variableInterval) {
-                variableInterval.stop();
-            }
-
-            var angle = parseFloat($("#angleValue").val());
-
-            var err = badAngle(angle);
-            if (err) {
-                showError(err);
-                return;
-            }
-
-            if (angle < 0.5 && angle > 0) {
-
-                var A = getA(-10, -angle);
-
-                line(A.x, A.y, -200, 0, 2, lineColor);
-                line(A.x, -A.y, -200, 0, 2, lineColor);
-                circle(A.x, A.y, 3, 3, lineColor);
-
-                for (var i = 0; i < 200; i++) {
-                    circle(xO, yO, i, 1, lineColor);
-                }
-                return;
-            }
-
-            // Another hack.
-            if (angle > 84.7) {
-                angle = 84.7
-            }
-
-            $("#limit").val(getLimit(angle));
-
-            var A = getA(-10, -angle);
-
-            start(A.x, A.y, function() {
-
-                var A = getA(-10, angle);
-                start(A.x, A.y, function() {
-                    console.log("Stopped...");
-                });
-            });
-        });
+        $("#drawButton").on("click", draw);
     }
 
     /**
@@ -385,12 +403,13 @@ $(document).ready(function () {
      *
      * @name start
      * @function
-     * @param {Number} xA The current x value.
-     * @param {Number} yA The current y value.
+     * @param {Point} point The current point.
      * @param {Function} callback The callback function.
      * @return {undefined}
      */
-    function start(xA, yA, callback) {
+    function start(point, callback) {
+
+        callback = callback || function () {};
 
         // Clear the interval
         if (variableInterval) {
@@ -398,59 +417,43 @@ $(document).ready(function () {
         }
 
         // First point
-        xA = parseFloat(xA);
-        yA = parseFloat(yA);
-
-        // The slope of AB
-        var m = (yA / (200 + xA));
-
-        // First point that is found
-        var firstP = firstPoint(m, xA, yA);
+        var xA = parseFloat(point.x)
+          , yA = parseFloat(point.y)
+          , m = (yA / (200 + xA))
+          , firstP = firstPoint(m, xA, yA)
+          ;
 
         // Draw line
         line(xA, yA, firstP.x, firstP.y, 2, lineColor);
 
-        // Point A becomes P.
+        // Update variables
         var A = {
-            "x": xP,
-            "y": yP
-        };
+                x: xP
+              , y: yP
+            }
+          , B = firstP
+          , C = {}
+          , R = 200
+          , t = 0
+          , withTemp = 1000
+          , temp = {
+                x: A.x.toFixed(7)
+              , y: A.y.toFixed(7)
+            }
+          , pointP = JSON.stringify(temp)
+          , L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2))
+          ;
 
-        // A, B, C: the three points
-        var A = A;
-        var B = firstP;
-        var C = {};
-
-        // Radius
-        var R = 200;
-
-        // Counter
-        var t = 0;
-
-        // Limit
-        var withTemp = parseInt($("#limit").val()) || 0;
-
-        var temp = {
-            "x": A.x.toFixed(7),
-            "y": A.y.toFixed(7)
-        };
-
-        // Convert to string point P: "{ "x": "-200.0000000", "y": "0.0000000" }"
-        var pointP = JSON.stringify(temp);
-
-        // Length of segment
-        var L = Math.sqrt(Math.pow((A.x - B.x), 2) + Math.pow((A.y - B.y), 2));
-
-        variableInterval = window.setVariableInterval(function() {
+        variableInterval = setVariableInterval(function() {
             interval = this.interval;
 
             // Get the next point
-            var C = M(A, B, R, L);
+            C = M(A, B, R, L);
 
             // Convert to string the next point
             temp = {
-                "x": round(C.x, 7).toFixed(7),
-                "y": round(C.y, 7).toFixed(7)
+                x: round(C.x, 7).toFixed(7)
+              , y: round(C.y, 7).toFixed(7)
             };
 
             var strC = JSON.stringify(temp);
@@ -458,7 +461,6 @@ $(document).ready(function () {
             // If limit was setted verify if t is not higher than limit
             if (withTemp) {
                 if (t > withTemp) {
-                    console.log("t stopped the script.");
                     callback();
                     variableInterval.stop();
                     return;
@@ -466,7 +468,7 @@ $(document).ready(function () {
             }
 
             // If the result doesn't contain code key, draw the line
-            var drawValue = draw(B, C, R);
+            var drawValue = check(B, C, R);
 
             if (!drawValue.code) {
                 line(B.x, B.y, C.x, C.y, 2, lineColor);
@@ -481,7 +483,6 @@ $(document).ready(function () {
 
             // If point C is same with point P, SUCCESS! Stop it!
             if (strC == pointP) {
-                console.log("Same point! Yeah! :-)");
                 variableInterval.stop();
                 callback();
                 return;
@@ -494,24 +495,11 @@ $(document).ready(function () {
             B.y = C.y;
 
             t++;
-            console.log(t);
-
         }, delay);
 
 
         // Point P
         circle(xP, yP, 2, 3, '#003300');
-    }
-
-    /*
-        ===========================================
-                       BASIC FUNCTIONS
-        ===========================================
-    */
-
-    // Round
-    function round(num, decimals) {
-        return Math.round(num*Math.pow(10,decimals))/Math.pow(10,decimals);
     }
 
     /**
@@ -639,7 +627,7 @@ $(document).ready(function () {
         Verify if the numbers are correct.
         If not, return an false value.
     */
-    function draw(B, C, R) {
+    function check(B, C, R) {
 
         var sum1 = Math.pow(B.x, 2) + Math.pow(B.y, 2);
         var sum2 = Math.pow(C.x, 2) + Math.pow(C.y, 2);
