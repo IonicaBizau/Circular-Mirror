@@ -1,4 +1,12 @@
 $(document).ready(function () {
+
+    // Errors
+    var ERROR_MESSAGES = {
+        NOT_SUPPORTED: "The angle is not supported yet."
+      , NEGATIVE_ANGLE: "The angle is negative. Put a positive one less than 90 degrees."
+      , INVALID_ANGLE: "The angle cannot be 90 degrees or greater."
+    };
+
     // Canvas
     var canvas, context;
 
@@ -235,18 +243,6 @@ $(document).ready(function () {
     }
 
     function badAngle(angle, callback) {
-        var messages = {
-            "en": [
-                "The angle is not supported yet.",
-                "The angle is negative. Put a positive one less than 90 degrees.",
-                "The angle cannot be 90 degrees or greater."
-            ],
-            "ro": [
-                "Aplicația nu poate simula ce se întâmplă in cazul acestui unghi.",
-                "Unghiul este negativ. Unghiul trebuie sa fie pozitiv, dar mai mic decât 90 de grade.",
-                "Unghiul nu poate fi de 90 de grade sau mai mare."
-            ]
-        };
 
         angle = Math.abs(angle);
 
@@ -261,15 +257,15 @@ $(document).ready(function () {
         }
 
         if (angles.indexOf(angle) !== -1) {
-            return messages[lang][0];
+            return ERROR_MESSAGES.NOT_SUPPORTED;
         }
 
         if (angle < 0) {
-            return messages[lang][1];
+            return ERROR_MESSAGES.NEGATIVE_ANGLE;
         }
 
         if (angle >= 90) {
-            return messages[lang][2];
+            return ERROR_MESSAGES.INVALID_ANGLE;
         }
 
         return null;
