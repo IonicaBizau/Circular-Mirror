@@ -1,15 +1,3 @@
-/*
-    CSS STYLES FOR CIRCULAR MIRROR APPLICATION
-    COPYRIGHT (C) IONICA BIZAU
-*/
-
-@font-face {
-    font-family: "Kaushan Script";
-    font-style: normal;
-    font-weight: 400;
-    src: local('Kaushan Script'), local('KaushanScript-Regular'), url(fonts/font.woff) format('woff');
-}
-
 body {
     background: url("img/bg.png");
 }

@@ -12,20 +12,5 @@ You can see it alive clicking [here](http://physicsprojects.github.io/Circular-M
 ## Credits
 Thanks for [mixedmath](http://math.stackexchange.com/users/9754/mixedmath)'s suggestion: "You are essentially asking how to find the intersection points of two circles, right?" ([link](http://math.stackexchange.com/questions/344052/intersection-of-chord-with-circle-knowing-the-length-and-a-point/351903#comment740176_344052))
 
-## Copyright
-
-Circular mirror - simulating the reflections of a ray of light in a circular mirror
-Copyright (C) 2013-14  IONICĂ BIZĂU
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/.
+## License
+See the [LICENSE](/LICENSE) file.
