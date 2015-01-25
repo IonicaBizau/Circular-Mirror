@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    // Language
-    var lang;
-
     // Canvas
     var canvas, context;
 
@@ -75,7 +72,6 @@ $(document).ready(function () {
     */
     $("document").ready(function() {
         init();
-        lang = $("body").attr("data-lang")
         $("html").hide().fadeIn(800);
         handlers();
     });
@@ -103,18 +99,6 @@ $(document).ready(function () {
             // CTRL ==> Clear
             if (e.keyCode === 17) {
                 $("#resetButton").click();
-            }
-
-            // SPACE ==> Close modal
-            if (e.keyCode === 32) {
-                $(".btn-close").click();
-            }
-        });
-
-        // Keydown in textboxes
-        $("#xValue").on("keydown", function(evt) {
-            if(evt.keyCode === 13) {
-                $("#drawButton").click();
             }
         });
 
@@ -153,7 +137,7 @@ $(document).ready(function () {
 
             if (angle < 0.5 && angle > 0) {
 
-                var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
+                var A = getA(-10, -angle);
 
                 line(A.x, A.y, -200, 0, 2, lineColor);
                 line(A.x, -A.y, -200, 0, 2, lineColor);
@@ -172,17 +156,14 @@ $(document).ready(function () {
 
             $("#limit").val(getLimit(angle));
 
-            var A = getA(parseFloat($("#xValue").val()) + 200, -angle);
+            var A = getA(-10, -angle);
 
             start(A.x, A.y, function() {
 
-                var A = getA(parseFloat($("#xValue").val()) + 200, angle);
+                var A = getA(-10, angle);
                 start(A.x, A.y, function() {
                     console.log("Stopped...");
                 });
-
-                $("#yValue").val(A.y);
-                $("#xValue").val(A.x);
             });
         });
 
@@ -294,12 +275,8 @@ $(document).ready(function () {
         return null;
     }
 
-    /*
-        Bootstrap modal error
-    */
     function showError(message) {
-        $("#error-message").text(message);
-        $("#modal-error").modal("show");
+        alert(message);
     }
 
     /**
