@@ -452,8 +452,8 @@ $(document).ready(function () {
 
             // Convert to string the next point
             temp = {
-                x: round(C.x, 7).toFixed(7)
-              , y: round(C.y, 7).toFixed(7)
+                x: C.x
+              , y: C.y
             };
 
             var strC = JSON.stringify(temp);
@@ -615,11 +615,9 @@ $(document).ready(function () {
         var tg = Math.tan(angleRad);
         var yA = xA * tg;
 
-        var ROUND = 2;
-        // TODO: round?
         return {
-            "x": round(xA - 200, ROUND),
-            "y": round(yA, ROUND)
+            x: xA - 200
+          , y: yA
         };
     }
 
@@ -645,7 +643,7 @@ $(document).ready(function () {
         // Again, not the best method.
         R = Math.pow(R, 2) + 3;
 
-        if (!(round(sum1, 0) <= R && round(sum2, 0) <= R)) {
+        if (!(sum1 <= R && sum2 <= R)) {
             return {
                 "message": "Something is wrong. Sum1 or sum2 is higher than R^2.",
                 "code": 2,
