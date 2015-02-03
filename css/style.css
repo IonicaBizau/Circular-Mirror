@@ -3,7 +3,6 @@
 
 .modal p { color: black; }
 body { background-image: url("./bg.png"); }
-h1 { margin: 0; }
 
 #myCanvas {
     background: white;
