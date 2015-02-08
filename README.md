@@ -4,7 +4,7 @@ Simulates the reflections of a ray of light inside of a circular mirror.
 ![](http://i.imgur.com/BRX6Euh.png)
 
 ## Online demo
-![Click here for the live demo.](http://physicsprojects.github.io/Circular-Mirror/)
+[Click here for the live demo.](http://physicsprojects.github.io/Circular-Mirror/)
 
 ## Local installation
 
