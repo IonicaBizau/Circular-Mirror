@@ -1,102 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head> 
+    <head>
         <title>Reflections into a circular mirror</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script src="js/jquery-1.8.3.min.js"></script>
-        <script src="bootstrap/js/bootstrap.js"></script>
-        <script src="slider/js/slider.js"></script>
-        <script src="main.js"></script>
-        <link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
-        <link href="slider/css/slider.css" rel="stylesheet" />
-        <link href="style.css" rel="stylesheet" />
+        <script src="js/main.js"></script>
+        <link href="css/style.css" rel="stylesheet" />
     </head>
     <body data-lang="en">
-        <!-- Error modal -->
-        <div id="modal-error" class="modal hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Error</h3>
+        <header class="bg-black pad-xl text-center">
+            <div class="container">
+                <h1>Multiple reflections into a circular mirror</h1>
+                <p>Browse <a href="http://github.com/PhysicsProjects/circular-mirror">the code on <span class="octicon octicon-mark-github"></span> GitHub.</a></p>
             </div>
-            
-            <div class="modal-body">
-                <p id="error-message"></p>
-            </div>
-            
-            <div class="modal-footer">
-                <a href="#" class="btn btn-danger btn-close" data-dismiss="modal" aria-hidden="true">Close</a>
-            </div>
-        </div>
+        </header>
+        <article class="text-center pad-xl">
+            <div class="container">
+                <div class="pad-l">
+                    <button id="resetButton" class="btn bg-yellow">
+                        <span class="octicon octicon-trashcan"></span>
+                        Clear
+                    </button>
 
-        <div align="center" class="container" id="container">
-            <h1 class="logo">Multiple reflections into a circular mirror</h1>
-            <p>Open source project at <a href="http://github.com/IonicaBizau/circular-mirror">github.com/IonicaBizau/circular-mirror</a></p> 
-            <p><a href="index.ro.html">RO</a> | EN</p>
-            <div class="btn-group">
-                <button id="resetButton" class="btn btn-large btn-warning">
-                    <i class="icon-trash icon-white"></i> Clear
-                </button>
-                
-                <button id="drawButton" class="btn btn-large btn-primary">
-                    <i class="icon-play icon-white"></i> Draw
-                </button>
-                
-                <button class="btn btn-success btn-download">
-                    <i class="icon-white icon-download"></i> Descarcă
-                </button>
+                    <button id="drawButton" class="btn bg-blue">
+                        <span class="octicon octicon-paintcan"></span>
+                        Draw
+                    </button>
 
-                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle">
-                    <i class="icon-adjust icon-white"></i> Select color <span class="caret"></span>
-                </button>
-                
-                <ul class="dropdown-menu">
-                    <li><a data-color="red">Red</a></li>
-                    <li><a href="#" data-color="orange">Orange</a></li>
-                    <li><a href="#" data-color="yellow">Yellow</a></li>
-                    <li><a href="#" data-color="green">Green</a></li>
-                    <li><a href="#" data-color="blue">Blue</a></li>
-                    <li><a href="#" data-color="indigo">Indigo</a></li>
-                    <li><a href="#" data-color="violet">Violet</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Random color</a></li>
-                </ul>
-            </div>
+                    <button class="btn bg-green btn-download">
+                        <span class="octicon octicon-cloud-download"></span>
+                        Download
+                    </button>
 
-
-            <div class="hidden">
-                xA: <input value="-210" id="xValue" type="text" placeholder="xA" />
-                yA: <input value="-10" id="yValue" type="text" placeholder="yA" disabled/> <br />
-                limit: <input value="1000" id="limit" type="text" placeholder="Limit"/> <br />
-            </div>
-
-            Angle (deg): <input value="45" id="angleValue" type="text" placeholder="Insert an angle." /> <br />
-
-            <div class="slider slider-horizontal hidden" style="width: 140px;">
-                <div class="slider-track">
-                    <div class="slider-selection" style="left: 0%; width: 50%;"></div>
-                    <div class="slider-handle round" ></div>
-                    <div class="slider-handle round hide" style="left: 0%;"></div>
+                    Angle (deg): <input value="45" id="angleValue" type="text" placeholder="Insert an angle." class="form-elm" /> <br />
                 </div>
-                <div class="tooltip top" style="top: -40px; left: -8px;"><div class="tooltip-arrow"></div>
-                <div class="tooltip-inner">Current value: 10</div></div><input type="text" id="sl1" value="4" class="span2" style="">
-            </div> 
-
-            <br />
-            
-            <!-- Select color -->    
-            <div class="row">
-                <div class="span1">
-                </div>
-                <div class="span2">
-                    <div class="btn-group">
-                    </div>
-                </div>
+                <canvas id="myCanvas" width="600" height="600"></canvas>
             </div>
-            
-            <br />
-
-            <canvas id="myCanvas" width="600" height="600"> </canvas>
-
-        </div>
+        </article>
+        <footer class="bg-black pad-xl text-center">
+            <div class="container">
+                Created with JavaScript and <span class="octicon octicon-heart"></span> from Romania.
+            </div>
+        </footer>
     </body>
 </html>
