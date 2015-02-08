@@ -2,7 +2,7 @@
   "name": "circular-mirror",
   "version": "1.0.0",
   "description": "Simulates the reflections of a ray of light inside of a circular mirror.",
-  "main": "index.js",
+  "main": "js/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
