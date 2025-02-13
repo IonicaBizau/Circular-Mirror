@@ -1,6 +1,6 @@
 {
   "name": "circular-mirror",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simulates the reflections of a ray of light inside of a circular mirror.",
   "main": "js/main.js",
   "scripts": {
@@ -15,10 +15,27 @@
     "mirror",
     "simulation"
   ],
-  "author": "Ionică Bizău <bizauionica@gmail.com>",
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/PhysicsProjects/Circular-Mirror/issues"
   },
-  "homepage": "https://github.com/PhysicsProjects/Circular-Mirror"
+  "homepage": "https://github.com/PhysicsProjects/Circular-Mirror",
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "index.d.ts",
+    "package-lock.json",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
 }

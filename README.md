@@ -19,7 +19,7 @@
 
 # circular-mirror
 
- [![Support me on Patreon][badge_patreon]][patreon] [![Buy me a book][badge_amazon]][amazon] [![PayPal][badge_paypal_donate]][paypal-donations] [![Ask me anything](https://img.shields.io/badge/ask%20me-anything-1abc9c.svg)](https://github.com/IonicaBizau/ama) [![Version](https://img.shields.io/npm/v/circular-mirror.svg)](https://www.npmjs.com/package/circular-mirror) [![Downloads](https://img.shields.io/npm/dt/circular-mirror.svg)](https://www.npmjs.com/package/circular-mirror) [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/johnnyb?utm_source=github&utm_medium=button&utm_term=johnnyb&utm_campaign=github)
+ [![Support me on Patreon][badge_patreon]][patreon] [![Buy me a book][badge_amazon]][amazon] [![PayPal][badge_paypal_donate]][paypal-donations] [![Ask me anything](https://img.shields.io/badge/ask%20me-anything-1abc9c.svg)](https://github.com/IonicaBizau/ama) [![Version](https://img.shields.io/npm/v/circular-mirror.svg)](https://www.npmjs.com/package/circular-mirror) [![Downloads](https://img.shields.io/npm/dt/circular-mirror.svg)](https://www.npmjs.com/package/circular-mirror) [![Get help on Codementor](https://cdn.codementor.io/badges/get_help_github.svg)](https://www.codementor.io/@johnnyb?utm_source=github&utm_medium=button&utm_term=johnnyb&utm_campaign=github)
 
 <a href="https://www.buymeacoffee.com/H96WwChMy" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee"></a>
 
@@ -30,6 +30,7 @@
 
 
 > Simulates the reflections of a ray of light inside of a circular mirror.
+
 
 
 
@@ -80,6 +81,8 @@ There are few ways to get help:
 
 
 
+
+
 ## :memo: Documentation
 
 
@@ -116,9 +119,6 @@ Draws a circle on the canvas.
 - **Number** `w`: The line width.
 - **String** `color`: The color.
 
-#### Return
-- ****
-
 ### `line(x1, y1, x2, y2, w, color)`
 Draws a line on the canvas.
 
@@ -131,9 +131,6 @@ Draws a line on the canvas.
 - **Number** `w`: The line width.
 - **String** `color`: The color.
 
-#### Return
-- ****
-
 ### `canvasArrow(context, fromx, fromy, tox, toy)`
 Draws an arrow on the canvas.
 
@@ -145,26 +142,14 @@ Draws an arrow on the canvas.
 - **Number** `tox`: The target `x` value.
 - **Number** `toy`: The target `y` value.
 
-#### Return
-- ****
-
 ### `init()`
 This function is called to reinit the canvas.
-
-#### Return
-- ****
 
 ### `draw()`
 Starts drawing the things.
 
-#### Return
-- ****
-
 ### `handlers()`
 This function appends the DOM handlers.
-
-#### Return
-- ****
 
 ### `getLimit(angle)`
 This is a **hack**. This roundes the angle in a format that is supported by the application.
@@ -184,7 +169,7 @@ Checks if the angle is supported.
 - **Number** `angle`: The angle that should be checked.
 
 #### Return
-- **String** An error (string) or `null`.
+- **null|String** An error (string) or `null`.
 
 ### `showError(message)`
 Shows an error message.
@@ -193,9 +178,6 @@ Shows an error message.
 
 - **String** `message`: The error message.
 
-#### Return
-- ****
-
 ### `start(point, callback)`
 Draws the lines on the canvas.
 
@@ -203,9 +185,6 @@ Draws the lines on the canvas.
 
 - **Point** `point`: The current point.
 - **Function** `callback`: The callback function.
-
-#### Return
-- ****
 
 ### `M(A:, B:, R:, L:)`
 THE MOST IMPORTANT FUNCTION.
@@ -311,7 +290,7 @@ Thanks! :heart:
 
 
 [license]: /LICENSE
-[website]: undefined
+[website]: https://ionicabizau.net
 [contributing]: /CONTRIBUTING.md
 [docs]: /DOCUMENTATION.md
 [badge_patreon]: https://ionicabizau.github.io/badges/patreon.svg
